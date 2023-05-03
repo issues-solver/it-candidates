@@ -1,1 +1,52 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@use '~normalize.css' as *;
+@use './assets/themes/default-theme' as default;
+
+@use './app/app.component.theme' as *;
+
+@include mat.core();
+
+@mixin custom-components-theme($theme) {
+  // paste your custom components here
+  @include it-app-component-theme($theme);
+}
+
+@mixin material-components-theme($theme) {
+  // Paste your material components here
+  @include mat.core-theme($theme);
+  @include mat.list-theme($theme);
+  @include mat.sidenav-theme($theme);
+  @include mat.toolbar-theme($theme);
+}
+
+.default-theme {
+  @include custom-components-theme(default.$theme);
+  @include material-components-theme(default.$theme);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: initial;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

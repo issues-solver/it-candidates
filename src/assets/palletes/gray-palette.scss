@@ -1,0 +1,36 @@
+@function use($light-contrast, $dark-contrast) {
+  @return (
+    50 : #F2F2F2,
+    100 : #E5E5E5,
+    150 : #E6E6E6,
+    200 : #CCCCCC,
+    300 : #B2B2B2,
+    400 : #999999,
+    500 : #808080,
+    600 : #666666,
+    700 : #4D4D4D,
+    800 : #333333,
+    900 : #1A1A1A,
+    // DV DESIGN SYSTEM DON'T SUPPORT A(accent) color inside one pallet, so here copy of regular hue's
+    A100 : #E5E5E5,
+    A200 : #CCCCCC,
+    A400 : #999999,
+    A700 : #4D4D4D,
+    contrast: (
+      50 : $dark-contrast,
+      100 : $dark-contrast,
+      200 : $dark-contrast,
+      300 : $dark-contrast,
+      400 : $dark-contrast,
+      500 : $light-contrast,
+      600 : $light-contrast,
+      700 : $light-contrast,
+      800 : $light-contrast,
+      900 : $light-contrast,
+      A100 : $dark-contrast,
+      A200 : $dark-contrast,
+      A400 : $dark-contrast,
+      A700 : $light-contrast,
+    )
+  )
+};
