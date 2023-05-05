@@ -1,1 +1,14 @@
-<app-candidates-table></app-candidates-table>
+<app-table
+  [columns]="columns"
+  [dataSource]="(candidatesData$ | async)?.candidates">
+</app-table>
+
+<ng-template #contactsInfo let-row="row" let-column=column>
+  <div class="cell-content">
+    <ul>
+      <li *ngFor="let contact of getCandidateContacts | memoizePipe : row[column.value]">
+        {{ contact.type}}: {{contact.value }}
+      </li>
+    </ul>
+  </div>
+</ng-template>

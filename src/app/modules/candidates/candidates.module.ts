@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CandidatesComponent } from './candidates.component';
-import { CandidatesTableComponent } from './table/candidates-table.component';
-import { MatTableModule } from '@angular/material/table';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    MatTableModule,
+    SharedModule,
   ],
-  declarations: [CandidatesComponent, CandidatesTableComponent],
+  declarations: [CandidatesComponent],
   exports: [CandidatesComponent],
 })
 export class CandidatesModule {}

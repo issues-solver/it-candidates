@@ -1,0 +1,28 @@
+<div class="example-container mat-elevation-z8">
+  <table mat-table [dataSource]="data" class="mat-elevation-z8 table">
+    <ng-container *ngFor="let column of columns" [matColumnDef]="column.value"
+      [sticky]="column?.sticky">
+      <th mat-header-cell
+          *matHeaderCellDef
+          [attr.style]="column.flexWidth ? 'flex: ' + column.flexWidth : ''">
+        {{ column.header }}
+      </th>
+      <td mat-cell
+          *matCellDef="let row"
+          [attr.style]="column.flexWidth ? 'flex: ' + column.flexWidth : ''">
+        <ng-template
+          [ngTemplateOutlet]="column['typeData']['type'] === columnType.Custom ? column['typeData']['customTemplate'] : cellTemplates[column['typeData']['type']]"
+          [ngTemplateOutletContext]="{column: column, row: row}">
+<!--TODO: use memoize pipe to define templateOutlet-->
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
+<ng-template #text let-column="column" let-row="row">
+  {{ row[column.value] }}
+</ng-template>

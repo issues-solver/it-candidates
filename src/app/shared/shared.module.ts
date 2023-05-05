@@ -5,6 +5,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { TableComponent } from './components';
+import { MatTableModule } from '@angular/material/table';
+import { MemoizePipe } from './pipes';
 
 @NgModule({
   imports: [
@@ -14,14 +17,20 @@ import { MatButtonModule } from '@angular/material/button';
     MatListModule,
     MatIconModule,
     MatButtonModule,
+    MatTableModule,
   ],
-  declarations: [],
+  declarations: [
+    TableComponent,
+    MemoizePipe,
+  ],
   exports: [
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
     MatIconModule,
     MatButtonModule,
+    TableComponent,
+    MemoizePipe,
   ],
 })
 export class SharedModule {}
