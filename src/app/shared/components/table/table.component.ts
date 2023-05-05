@@ -11,10 +11,15 @@ export class TableComponent implements OnInit {
   public cellTemplates!: Record<Exclude<ColumnType, ColumnType.Custom>, TemplateRef<any>>;
   public columnType = ColumnType;
   public displayedColumns: any[] = [];
+  public data: any[] = [];
 
   @Input() columns: TableColumn[] = [];
 
-  @Input() dataSource: any[] = [];
+  @Input() set dataSource(data: any[] | undefined) {
+    if (data) {
+      this.data = data;
+    }
+  };
 
   @ViewChild('text', { static: true }) text!: TemplateRef<unknown>;
 

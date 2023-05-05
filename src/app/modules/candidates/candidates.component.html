@@ -1,6 +1,6 @@
 <app-table
   [columns]="columns"
-  [dataSource]="candidates">
+  [dataSource]="(candidatesData$ | async)?.candidates">
 </app-table>
 
 <ng-template #contactsInfo let-row="row" let-column=column>

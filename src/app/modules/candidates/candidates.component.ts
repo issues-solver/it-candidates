@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ColumnType, TableColumn } from '../../shared/models';
-import { Candidate } from '../models';
-import { ContactType } from '../constants';
+import { Candidate, CandidatesData } from '../../core/models';
+import { ContactType } from '../../core/constants';
+import { CandidatesService } from '../../core/services';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-candidates',
@@ -11,6 +13,8 @@ import { ContactType } from '../constants';
 })
 export class CandidatesComponent implements OnInit {
   public columns: TableColumn[] = [];
+
+  public candidatesData$!: Observable<CandidatesData>;
 
   public candidates: Candidate[] = [
     {
@@ -90,8 +94,11 @@ export class CandidatesComponent implements OnInit {
 
   @ViewChild('contactsInfo', { static: true }) contactsInfoTemplate!: TemplateRef<any>;
 
+  constructor(private candidatesService: CandidatesService) {}
+
   ngOnInit() {
     this.initColumns();
+    this.candidatesData$ = this.getCandidatesData();
   }
 
   private initColumns(): void {
@@ -122,6 +129,12 @@ export class CandidatesComponent implements OnInit {
         flexWidth: '4',
       },
     ];
+  }
+
+  private getCandidatesData() {
+    // arguments will be provided in future
+    return this.candidatesService.getCandidates()
+      .pipe(tap((res) => console.log(res)));
   }
 
   public getCandidateContacts(data: Candidate['contacts']): { type: string, value: string }[] {

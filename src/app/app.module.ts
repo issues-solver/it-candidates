@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CandidatesModule } from './modules/candidates/candidates.module';
+import { CoreModule } from './core/core.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,8 +17,10 @@ import { CandidatesModule } from './modules/candidates/candidates.module';
     BrowserModule,
     SharedModule,
     BrowserAnimationsModule,
+    CoreModule,
     CandidatesModule,
     AppRoutingModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

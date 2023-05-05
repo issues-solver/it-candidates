@@ -1,5 +1,9 @@
 import { ContactType } from '../constants';
 
+export interface CandidatesData {
+  candidates: Candidate[];
+}
+
 export interface Candidate {
   id: string;
   name: string;

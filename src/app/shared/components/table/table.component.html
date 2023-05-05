@@ -1,5 +1,5 @@
 <div class="example-container mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table">
+  <table mat-table [dataSource]="data" class="mat-elevation-z8 table">
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.value"
       [sticky]="column?.sticky">
       <th mat-header-cell
