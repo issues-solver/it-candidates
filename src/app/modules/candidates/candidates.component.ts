@@ -23,7 +23,7 @@ export class CandidatesComponent implements OnInit {
       contacts: {
         linkedin: 'test',
         email: 'tut@asd.by',
-        other: 'telephone number: 572 072 053'
+        discord: 'discord 1232'
       }
     },
     {

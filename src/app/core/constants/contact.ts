@@ -1,6 +1,7 @@
 export enum ContactType {
   Linkedin = 'linkedin',
-  Email = 'email',
   Telegram = 'telegram',
-  Other = 'other',
+  Email = 'email',
+  Discord = 'discord',
+  Slack = 'slack',
 }

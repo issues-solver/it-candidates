@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AddCandidateComponent } from './add-candidate.component';
+import { EditCandidateComponent } from './components/edit-candidate/edit-candidate.component';
 
 const routes: Routes = [
   { path: '', component: AddCandidateComponent, },
+  { path: ':candidateId', component: EditCandidateComponent, },
 ];
 
 @NgModule({

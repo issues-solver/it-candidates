@@ -12,7 +12,8 @@ export interface Candidate {
 
 export interface CandidateContacts {
   [ContactType.Linkedin]: string;
-  [ContactType.Email]: string;
   [ContactType.Telegram]: string;
-  [ContactType.Other]: string;
+  [ContactType.Email]: string;
+  [ContactType.Discord]: string;
+  [ContactType.Slack]: string;
 }
