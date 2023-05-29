@@ -6,15 +6,16 @@ const cors = require('cors');
 const candidateRoutes = require('./routes/candidate');
 const utilRoutes = require('./routes/util');
 const authRoutes = require('./routes/auth');
+const config = require('./config');
 
 const app = express();
 
 const port = process.env.PORT || 3000;
 
 const getMongoDbUrl = (
-  userName = 'sergejprovalinskij',
-  password = 'qwerty597',
-  databaseName = 'it-candidates-database'
+  userName = config.databaseUserName,
+  password = config.databasePassword,
+  databaseName = config.databaseName
 ) => `mongodb+srv://${userName}:${password}@cluster0.omwdai9.mongodb.net/${databaseName}?retryWrites=true&w=majority`;
 
 const MONGODB_URI = getMongoDbUrl();
