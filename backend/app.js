@@ -1,92 +1,40 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const cors = require('cors');
+
+const candidateRoutes = require('./routes/candidate');
+const utilRoutes = require('./routes/util');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
-const candidates = [
-  {
-    id: '0',
-    name: 'Hydrogen',
-    contacts: {
-      linkedin: 'test',
-      email: 'tut@asd.by',
-      other: 'telephone number: 572 072 053'
-    }
-  },
-  {
-    id: '1',
-    name: 'Helium',
-    contacts: {
-      linkedin: 'test',
-      telegram: '@mick_betch'
-    }
-  },
-  {
-    id: '2',
-    name: 'Lithium',
-    contacts: {
-      linkedin: 'test'
-    }
-  },
-  {
-    id: '3',
-    name: 'Beryllium',
-    contacts: {
-      linkedin: 'test'
-    }
-  },
-  {
-    id: '4',
-    name: 'Boron',
-    contacts: {
-      linkedin: 'test'
-    }
-  },
-  {
-    id: '5',
-    name: 'Carbon',
-    contacts: {
-      linkedin: 'test'
-    }
-  },
-  {
-    id: '6',
-    name: 'Nitrogen',
-    contacts: {
-      linkedin: 'test'
-    }
-  },
-  {
-    id: '7',
-    name: 'Oxygen',
-    contacts: {
-      linkedin: 'test'
-    }
-  },
-  {
-    id: '8',
-    name: 'Fluorine',
-    contacts: {
-      linkedin: 'test'
-    }
-  },
-  // {
-  //   id: '9',
-  //   name: 'Neon',
-  //   contacts: {
-  //     linkedin: 'test'
-  //   }
-  // },
-];
+const port = process.env.PORT || 3000;
 
-app.get((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-  next();
-});
+const getMongoDbUrl = (
+  userName = 'sergejprovalinskij',
+  password = 'qwerty597',
+  databaseName = 'it-candidates-database'
+) => `mongodb+srv://${userName}:${password}@cluster0.omwdai9.mongodb.net/${databaseName}?retryWrites=true&w=majority`;
 
-app.use('/api/candidates', (req, res) => {
-  return res.status(200).json({ candidates });
-});
+const MONGODB_URI = getMongoDbUrl();
+
+app.use(bodyParser.json());
+
+app.use(cors());
+
+app.use(candidateRoutes);
+app.use(utilRoutes);
+app.use(authRoutes);
+
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    console.log('Connected to the database');
+    app.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
+  })
+  .catch((err) => console.log('Connection failed!', err));
+
 
 module.exports = app;

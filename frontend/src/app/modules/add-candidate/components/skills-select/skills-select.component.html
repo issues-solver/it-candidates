@@ -1,0 +1,30 @@
+<div class="chips-select">
+  <mat-form-field class="chips-select__autocomplete" appearance="outline">
+    <mat-label>Add Skill *</mat-label>
+    <input type="text"
+           placeholder="Pick one or jot down your own"
+           aria-label="Number"
+           (focus)="onAutocompleteFocus()"
+           (keydown.enter)="onAutocompleteEnter(input.value)"
+           matInput
+           #input
+           [formControl]="skillControl"
+           [matAutocomplete]="autoComplete">
+    <mat-autocomplete #autoComplete="matAutocomplete">
+      <mat-option *ngFor="let option of filteredOptions$ | async"
+                  [value]="option"
+                  (click)="onOptionsSelect(option)">
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>Should choose at least one skill</mat-error>
+  </mat-form-field>
+  <mat-chip-list aria-label="Added Skills">
+    <mat-chip *ngFor="let skill of addedSkills; let i = index" (removed)="onSkillRemove(i)">
+      {{ skill }}
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+  </mat-chip-list>
+</div>

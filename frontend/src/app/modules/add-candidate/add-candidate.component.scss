@@ -1,0 +1,47 @@
+.candidate {
+  width: 90%;
+  margin: 0 auto;
+  &__actions {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  &__block {
+    margin-bottom: 10px;
+  }
+}
+
+.sub-title {
+  margin-bottom: 0;
+}
+
+.contacts__list {
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+}
+
+.form-field {
+  width: 32%;
+  margin-right: 2%;
+  flex-shrink: 0;
+  &:nth-of-type(3n) {
+    margin-right: 0;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  // reset material styles
+  margin-right: 0;
+  margin-left: 0;
+
+  &__btn {
+    &--camcel {
+      margin-right: 20px;
+    }
+  }
+}

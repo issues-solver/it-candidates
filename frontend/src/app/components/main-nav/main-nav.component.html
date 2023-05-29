@@ -1,0 +1,19 @@
+<mat-nav-list *ngIf="isMobileMode; else desktop">
+  <ng-container *ngFor="let navItem of navItems">
+    <a *ngIf="navItem.shown" [routerLink]="navItem.link" mat-list-item (click)="navItemClick.emit()">
+      {{navItem.title}}
+    </a>
+  </ng-container>
+</mat-nav-list>
+<ng-template #desktop>
+  <ul class="nav-list" *ngIf="!isMobileMode">
+    <ng-container *ngFor="let navItem of navItems">
+      <li *ngIf="navItem.shown" class="nav-list__item">
+        <a class="nav-list__link" mat-list-item
+           [routerLink]="navItem.link" routerLinkActive="nav-list__link--active">
+          {{navItem.title}}
+        </a>
+      </li>
+    </ng-container>
+  </ul>
+</ng-template>

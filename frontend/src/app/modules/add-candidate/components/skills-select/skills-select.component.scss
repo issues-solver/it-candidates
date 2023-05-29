@@ -1,0 +1,8 @@
+.chips-select {
+  display: flex;
+  align-items: baseline;
+  &__autocomplete {
+    width: 32%;
+    margin-right: 2%;
+  }
+}

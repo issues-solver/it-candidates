@@ -1,0 +1,36 @@
+<app-table
+  [columns]="columns"
+  [dataSource]="(candidatesData$ | async)?.candidates">
+</app-table>
+
+<ng-template #contactsInfo let-row="row" let-column=column>
+  <div class="cell-content">
+    <ul>
+      <li *ngFor="let contact of row[column.value]">
+        {{ contact.type}}: {{ contact.value }}
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #list let-row="row" let-column=column>
+  <div class="cell-content">
+    <ul>
+      <li *ngFor="let item of row[column.value]; let last = last">
+        {{ item }}<span *ngIf="!last">,</span>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #dateMs let-row="row" let-column=column>
+  <div class="cell-content">
+    {{ row[column.value] ? (row[column.value] | date : 'dd/MM/YYYY') : '' }}
+  </div>
+</ng-template>
+
+<ng-template #experience let-row="row" let-column=column>
+  <div class="cell-content">
+    {{getExperienceValue | memoizePipe : row[column.value]}}
+  </div>
+</ng-template>

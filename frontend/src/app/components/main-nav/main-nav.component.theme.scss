@@ -1,0 +1,23 @@
+@use '@angular/material' as mat;
+
+@mixin it-main-nav-component-theme($theme) {
+  $color-config: mat.get-color-config($theme);
+  $accent: map-get($color-config, accent);
+
+  app-main-nav {
+    .nav-list {
+      &__link {
+        color: map-get($accent, 100);
+        &--active {
+          border-bottom: 2px solid map-get($accent, 200);
+        }
+        &--active:hover {
+          border-color: map-get($accent, 300);
+        }
+        &:hover {
+          color: map-get($accent, 300);
+        }
+      }
+    }
+  }
+}
