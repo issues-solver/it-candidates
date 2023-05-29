@@ -27,7 +27,7 @@ const userSchema = new Schema({
                     type: String,
                     required: true,
                 },
-                contact: {
+                value: {
                     type: String,
                     required: true,
                 }

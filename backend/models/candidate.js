@@ -19,12 +19,24 @@ const candidateSchema  = new Schema({
   grade: String,
   experience: Number,
   lastContactDateMs: Number,
-  contacts: [{
-    type: {
-      type: String,
+  contacts: {
+    type: [
+      {
+        type: {
+          type: String,
+          required: true,
+        },
+        value: {
+          type: String,
+          required: true,
+        }
+      }
+    ],
+    validate: {
+      validator: (contacts) => (contacts && contacts.length >= 1),
+      message: 'At least one contact is required',
     },
-    value: String,
-  }],
+  }
 });
 
 module.exports = mongoose.model('Candidate', candidateSchema);
