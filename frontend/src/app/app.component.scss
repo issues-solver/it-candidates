@@ -1,0 +1,41 @@
+:host {
+  flex: 1 1 auto;
+}
+
+.main {
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.title {
+  a {
+    all: unset;
+    cursor: pointer;
+  }
+}
+
+.icons {
+  margin-left: 30px;
+}
+
+.sidenav-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+}
+
+.content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

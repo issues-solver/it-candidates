@@ -1,0 +1,65 @@
+/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@use '~normalize.css' as *;
+@use 'assets/themes/default-theme' as default;
+
+@use 'app/components/main-nav/main-nav.component.theme' as *;
+
+@include mat.core();
+
+@mixin custom-components-theme($theme) {
+  // paste your custom components here
+  @include it-main-nav-component-theme($theme);
+}
+
+@mixin material-components-theme($theme) {
+  // Paste your material components here
+  @include mat.core-theme($theme);
+  @include mat.list-theme($theme);
+  @include mat.sidenav-theme($theme);
+  @include mat.toolbar-theme($theme);
+  @include mat.chips-theme($theme);
+  @include mat.button-theme($theme);
+  @include mat.card-theme($theme);
+  @include mat.icon-theme($theme);
+  @include mat.form-field-theme($theme);
+  @include mat.input-theme($theme);
+  @include mat.autocomplete-theme($theme);
+  @include mat.select-theme($theme);
+  @include mat.datepicker-theme($theme);
+}
+
+.default-theme {
+  @include custom-components-theme(default.$theme);
+  @include material-components-theme(default.$theme);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  display: inline;
+}
+
+a {
+  text-decoration: none;
+  color: initial;
+}
+
+* {
+  box-sizing: border-box;
+}

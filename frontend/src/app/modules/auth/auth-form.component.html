@@ -1,0 +1,49 @@
+<mat-card class="auth">
+  <mat-card-header>
+    <mat-card-title></mat-card-title>
+  </mat-card-header>
+  <form [formGroup]="authForm" (ngSubmit)="onFormSubmit()">
+    <div class="auth__block">
+      <mat-form-field *ngIf="isSignUp" class="form-field" appearance="outline">
+        <input matInput formControlName="firstName" placeholder="First Name">
+      </mat-form-field>
+      <mat-form-field *ngIf="isSignUp" class="form-field" appearance="outline">
+        <input matInput formControlName="lastName" placeholder="Last Name">
+      </mat-form-field>
+    </div>
+    <div class="auth__block">
+      <mat-form-field class="form-field" appearance="outline">
+        <input matInput formControlName="email" placeholder="Email">
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <input matInput formControlName="password" type="password" placeholder="Password">
+      </mat-form-field>
+      <mat-form-field *ngIf="isSignUp" class="form-field" appearance="outline">
+        <input matInput formControlName="confirmPassword" type="password" placeholder="Confirm Password">
+      </mat-form-field>
+    </div>
+    <div *ngIf="isSignUp" class="contacts auth__block" formArrayName="contacts">
+      <div *ngFor="let contact of contactForms.controls; let i = index; let first = first" [formGroupName]="i" class="contacts__item">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Contact Type</mat-label>
+            <mat-select formControlName="type">
+              <mat-option *ngFor="let type of contactTypes" [value]="type">
+                {{ type | titlecase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <input matInput formControlName="contact" placeholder="Contact">
+          </mat-form-field>
+        <button *ngIf="!first" mat-icon-button color="warn" type="button" class="contacts__remove-btn" (click)="removeContactField(i)">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </div>
+      <button mat-icon-button type="button" color="primary" (click)="addContactField()">
+        <mat-icon>add</mat-icon> Add Contact
+      </button>
+    </div>
+
+    <button mat-raised-button color="primary" type="submit">{{ isSignUp ? 'Sign Up' : 'Sign In' }}</button>
+  </form>
+</mat-card>

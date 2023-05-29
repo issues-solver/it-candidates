@@ -1,0 +1,141 @@
+<mat-card class="candidate">
+  <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
+<!--TODO: Create custom reusable app-input component-->
+    <div class="candidate__block">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Full Name</mat-label>
+        <input type="text" matInput formControlName="fullName" autocomplete="off">
+        <mat-error *ngIf="form.controls['fullName'].hasError('required')">
+          Full Name is required
+        </mat-error>
+        <mat-error *ngIf="form.controls['fullName'].hasError('minlength')">
+          Should contain at least {{ fullNameMinLength }} characters
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Country</mat-label>
+        <input type="text" matInput formControlName="country" autocomplete="off">
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>City</mat-label>
+        <input type="text" matInput formControlName="city" autocomplete="off">
+      </mat-form-field>
+    </div>
+
+    <div formGroupName="contacts" class="candidate__block contacts">
+      <h3 class="sub-title"
+          [class.contacts-wrapper__title-invalid]="contactsFormGroup.hasError('atLeastOne') && contactsFormGroup.touched">
+        Contacts *
+      </h3>
+      <mat-error *ngIf="contactsFormGroup.hasError('atLeastOne') && contactsFormGroup.touched">
+        Should fill at least one contact
+      </mat-error>
+      <div class="contacts__list">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Linkedin</mat-label>
+          <input type="text" matInput formControlName="linkedin" autocomplete="off">
+          <mat-error *ngIf="contactsFormGroup.controls['linkedin'].hasError('minlength')">
+            Should contain at least {{ contactMinLength }} characters
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Telegram</mat-label>
+          <input type="text" matInput formControlName="telegram" autocomplete="off">
+          <mat-error *ngIf="contactsFormGroup.controls['telegram'].hasError('minlength')">
+            Should contain at least {{ contactMinLength }} characters
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input type="text" matInput formControlName="email" autocomplete="off">
+          <mat-error *ngIf="contactsFormGroup.controls['email'].hasError('minlength')">
+            Should contain at least {{ contactMinLength }} characters
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Discord</mat-label>
+          <input type="text" matInput formControlName="discord" autocomplete="off">
+          <mat-error *ngIf="contactsFormGroup.controls['discord'].hasError('minlength')">
+            Should contain at least {{ contactMinLength }} characters
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Slack</mat-label>
+          <input type="text" matInput formControlName="slack" autocomplete="off">
+          <mat-error *ngIf="contactsFormGroup.controls['slack'].hasError('minlength')">
+            Should contain at least {{ contactMinLength }} characters
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Phone</mat-label>
+          <input type="text" matInput formControlName="phone" autocomplete="off">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="candidate__block">
+      <app-skills-select [options]="apiSkills$ | async" [formControlName]="'skills'"></app-skills-select>
+    </div>
+
+    <div class="candidate__block">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Recruiter Contact</mat-label>
+        <mat-select formControlName="recruiterContact">
+          <mat-option>-- None --</mat-option>
+          <mat-optgroup *ngFor="let group of uiOwnContacts" [label]="group.type">
+            <mat-option *ngFor="let value of group.values" [value]="value">
+              {{ value }}
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
+        <mat-error *ngIf="form.controls['recruiterContact'].hasError('required')">
+          Recruiter Contact is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Last Contact Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="lastContactDate">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="candidate__block">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Grade</mat-label>
+        <mat-select formControlName="grade">
+          <mat-option>-- None --</mat-option>
+          <mat-option *ngFor="let grade of grades" [value]="grade">
+            {{ grade }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Experience</mat-label>
+        <mat-select formControlName="experience">
+          <mat-option>-- None --</mat-option>
+          <mat-option *ngFor="let value of experienceYears" [value]="value.value">
+            {{ value.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-card-actions class="candidate__actions actions">
+      <button mat-raised-button
+              color="warn"
+              class="actions__btn actions__btn--cancel"
+              type="button">
+        Cancel
+      </button>
+      <button mat-raised-button
+              color="primary"
+              class="actions__btn actions__btn--submit"
+              type="submit">
+        Create
+      </button>
+    </mat-card-actions>
+  </form>
+</mat-card>

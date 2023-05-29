@@ -1,0 +1,10 @@
+.nav-list {
+  display: flex;
+  &__item {
+    margin-left: 10px;
+  }
+  &__link {
+    transition: all 0.1s;
+    padding: 6px;
+  }
+}

@@ -1,0 +1,29 @@
+.auth {
+  width: 90%;
+  margin: auto;
+  min-height: 40%;
+  &__block {
+    margin-bottom: 10px;
+  }
+}
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+  &__item {
+    display: flex;
+    align-items: flex-start;
+  }
+  &__remove-btn {
+    margin-top: 8px;
+  }
+}
+
+.form-field {
+  width: 32%;
+  margin-right: 2%;
+  flex-shrink: 0;
+  &:nth-of-type(3n) {
+    margin-right: 0;
+  }
+}

@@ -2,27 +2,29 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const candidateSchema  = new Schema({
-  name: {
+  fullName: {
     type: String,
     required: true,
   },
-  contacts: {
-    linkedin: {
-      type: String,
-    },
-    email: {
-      type: String,
-    },
-    telegram: {
-      type: String,
-    },
-    other: {
-      type: String,
-    },
+  country: String,
+  city: String,
+  recruiterContact: {
+    type: String,
+    required: true,
   },
-  user: {
-
-  }
+  skills: {
+    type: [String],
+    required: true,
+  },
+  grade: String,
+  experience: Number,
+  lastContactDateMs: Number,
+  contacts: [{
+    type: {
+      type: String,
+    },
+    value: String,
+  }],
 });
 
 module.exports = mongoose.model('Candidate', candidateSchema);
