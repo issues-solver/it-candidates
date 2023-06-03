@@ -31,8 +31,4 @@ export class MainNavComponent {
       { title: 'Sign Up', link: 'signup', shown: !isLoggedIn, },
     ];
   }
-
-  onItemClicked() {
-    // works only for mobile mode
-  }
 }

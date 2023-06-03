@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -9,8 +9,9 @@ import {
 } from '@angular/forms';
 import { Candidate, Contact, User } from '../../core/models';
 import { ContactType, EXPERIENCE_YEARS, GRADES } from '../../core/constants';
-import { Observable } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { CandidatesService } from '../../core/services';
+import { AuthService } from '../auth/services/auth-service';
 
 type UiUserContacts = { type: ContactType, values: string[] }[];
 
@@ -20,13 +21,13 @@ type UiUserContacts = { type: ContactType, values: string[] }[];
   styleUrls: ['./add-candidate.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddCandidateComponent implements OnInit {
+export class AddCandidateComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   public form!: FormGroup;
   public contactsFormGroup!: FormGroup;
   public skillsFormArray!: FormArray;
   public fullNameMinLength = 3;
   public contactMinLength = 4;
-
   public userContacts: User['contacts'] = [
     { type: ContactType.Linkedin, value: 'linkedin 2' },
     { type: ContactType.Linkedin, value: 'linkedin 2' },
@@ -36,6 +37,7 @@ export class AddCandidateComponent implements OnInit {
     { type: ContactType.Slack, value: 'slack 1' },
   ];
   public uiOwnContacts: UiUserContacts = this.processUserContacts(this.userContacts);
+  public recruiterContacts$!: Observable<UiUserContacts>;
   public apiSkills$!: Observable<string[]>;
   public grades = GRADES;
   public experienceYears = EXPERIENCE_YEARS;
@@ -45,12 +47,15 @@ export class AddCandidateComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private candidatesService: CandidatesService,
+    private authService: AuthService,
     ) {
     this.initForm();
   }
 
   ngOnInit() {
     this.apiSkills$ = this.getApiSkills();
+    this.recruiterContacts$ = this.authService.getUser()
+      .pipe(map((user: User) => this.processUserContacts(user.contacts)));
   }
 
   private atLeastOneContactRequiredValidator(group: AbstractControl): ValidationErrors | null {
@@ -76,17 +81,13 @@ export class AddCandidateComponent implements OnInit {
         Validators.required,
         Validators.minLength(this.fullNameMinLength)
       ]],
-      country: [null],
-      city: [null],
       contacts: this.contactsFormGroup,
       recruiterContact: [null, [Validators.required]],
       skills: [[], [Validators.required]],
       lastContactDate: [],
       grade: [null],
-      experience: [null]
+      experience: [null],
     });
-    this.form.valueChanges
-      .subscribe(res => console.log(res));
   }
 
   private processUserContacts(contacts: User['contacts']): UiUserContacts {
@@ -107,12 +108,19 @@ export class AddCandidateComponent implements OnInit {
 
   public onFormSubmit() {
     console.log(this.form.value);
-    this.createCandidate();
+    if (this.form.valid) {
+      this.createCandidate();
+    } else {
+      this.form.markAllAsTouched();
+    }
   }
 
   private createCandidate() {
     this.candidatesService.createCandidate(this.getPayload())
-      .subscribe((res) => console.log(res));
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.form.reset();
+      });
   }
 
   private getPayload(): Candidate {
@@ -137,5 +145,10 @@ export class AddCandidateComponent implements OnInit {
   private getLastContactDateMs(): number {
     const { lastContactDate } = this.form.value;
     return lastContactDate ? lastContactDate.getTime() : null;
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

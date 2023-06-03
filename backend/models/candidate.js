@@ -6,9 +6,7 @@ const candidateSchema  = new Schema({
     type: String,
     required: true,
   },
-  country: String,
-  city: String,
-  recruiterContact: {
+  recruiterContact: { // TODO: think about [String] type
     type: String,
     required: true,
   },
@@ -36,6 +34,11 @@ const candidateSchema  = new Schema({
       validator: (contacts) => (contacts && contacts.length >= 1),
       message: 'At least one contact is required',
     },
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   }
 });
 

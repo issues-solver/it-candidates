@@ -9,6 +9,7 @@
     <mat-toolbar color="primary">RECRUITER TOOL</mat-toolbar>
     <app-main-nav
       [isMobileMode]="true"
+      [isLoggedIn]="authService.isLoggedIn$ | async"
       (navItemClick)="drawer.toggle()">
     </app-main-nav>
   </mat-sidenav>
