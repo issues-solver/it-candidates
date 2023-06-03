@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TableComponent } from './components';
 import { MatTableModule } from '@angular/material/table';
 import { MemoizePipe } from './pipes';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { MemoizePipe } from './pipes';
     MatIconModule,
     MatButtonModule,
     MatTableModule,
+    MatPaginatorModule,
   ],
   declarations: [
     TableComponent,

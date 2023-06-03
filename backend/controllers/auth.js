@@ -63,6 +63,12 @@ const postLogout = (req, res) => {
     res.json({ message: 'Logged out successfully' });
 };
 
+const getUser = async (req, res) => {
+    const user = await User.findOne({ _id: req.userId});
+    res.status(200).json(user);
+};
+
 exports.postSignup = postSignup;
 exports.postSignin = postSignin;
 exports.postLogout = postLogout;
+exports.getUser = getUser;

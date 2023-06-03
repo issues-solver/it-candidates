@@ -16,3 +16,13 @@ export enum ColumnType {
   Text = 'text',
   Custom = 'custom',
 }
+
+export interface TableData<T> {
+  data: T[];
+  totalItems: number;
+}
+
+export interface TableLoadData {
+  page: number;
+  limit: number;
+}

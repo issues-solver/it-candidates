@@ -1,9 +1,8 @@
 import { Contact } from './contact.model';
 import { Grade } from '../constants';
+import { TableData } from '../../shared/models';
 
-export interface CandidatesData {
-  candidates: Candidate[];
-}
+export type CandidatesData = TableData<Candidate>;
 
 export interface Candidate {
   id: string;

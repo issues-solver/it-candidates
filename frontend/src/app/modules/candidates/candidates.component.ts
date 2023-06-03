@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ColumnType, TableColumn } from '../../shared/models';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ColumnType, TableColumn, TableLoadData } from '../../shared/models';
 import { Candidate, CandidatesData } from '../../core/models';
 import { CandidatesService } from '../../core/services';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { EXPERIENCE_YEARS_MAP, ExperienceYears } from '../../core/constants';
 
 @Component({
@@ -11,10 +11,18 @@ import { EXPERIENCE_YEARS_MAP, ExperienceYears } from '../../core/constants';
   styleUrls: ['./candidates.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CandidatesComponent implements OnInit {
+export class CandidatesComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   public columns: TableColumn[] = [];
 
   public candidatesData$!: Observable<CandidatesData>;
+
+  public pageSizeOptions = [10, 20, 50];
+
+  public pageSize = 10;
+
+  public candidates$$ = new BehaviorSubject<TableLoadData>({ page: 1, limit: this.pageSize });
 
   @ViewChild('contactsInfo', { static: true }) contactsInfoRef!: TemplateRef<any>;
 
@@ -28,7 +36,12 @@ export class CandidatesComponent implements OnInit {
 
   ngOnInit() {
     this.initColumns();
-    this.candidatesData$ = this.getCandidatesData();
+
+    this.candidatesData$ = this.candidates$$
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((data) => this.getCandidatesData(data))
+      );
   }
 
   private initColumns(): void {
@@ -96,10 +109,8 @@ export class CandidatesComponent implements OnInit {
     ];
   }
 
-  private getCandidatesData() {
-    // arguments will be provided in future
-    return this.candidatesService.getCandidates()
-      .pipe(tap((res) => console.log(res)));
+  public getCandidatesData(data: TableLoadData) {
+    return this.candidatesService.getCandidates(data);
   }
 
   public getCandidateContacts(contacts: Candidate['contacts']): { type: string, value: string }[] {
@@ -108,5 +119,10 @@ export class CandidatesComponent implements OnInit {
 
   public getExperienceValue(value: ExperienceYears): string {
     return EXPERIENCE_YEARS_MAP[value];
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,6 +1,9 @@
 <app-table
   [columns]="columns"
-  [dataSource]="(candidatesData$ | async)?.candidates">
+  [dataSource]="candidatesData$ | async"
+  [pageSizeOptions]="pageSizeOptions"
+  [pageSize]="pageSize"
+  (loadData)="candidates$$.next($event)">
 </app-table>
 
 <ng-template #contactsInfo let-row="row" let-column=column>

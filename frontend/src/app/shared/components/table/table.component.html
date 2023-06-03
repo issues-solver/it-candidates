@@ -23,6 +23,9 @@
   </table>
 </div>
 
+<mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+               aria-label="Select page of Candidates search results"></mat-paginator>
+
 <ng-template #text let-column="column" let-row="row">
   {{ row[column.value] }}
 </ng-template>
