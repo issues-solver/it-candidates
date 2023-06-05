@@ -5,10 +5,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { TableComponent } from './components';
+import { DialogComponent, TableComponent } from './components';
 import { MatTableModule } from '@angular/material/table';
 import { MemoizePipe } from './pipes';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -20,9 +21,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatButtonModule,
     MatTableModule,
     MatPaginatorModule,
+    MatDialogModule,
   ],
   declarations: [
     TableComponent,
+    DialogComponent,
     MemoizePipe,
   ],
   exports: [
@@ -32,6 +35,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatIconModule,
     MatButtonModule,
     TableComponent,
+    DialogComponent,
     MemoizePipe,
   ],
 })

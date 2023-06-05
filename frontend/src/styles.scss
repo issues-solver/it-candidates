@@ -29,6 +29,7 @@
   @include mat.datepicker-theme($theme);
   @include mat.paginator-theme($theme);
   @include mat.table-theme($theme);
+  @include mat.dialog-theme($theme);
 }
 
 .default-theme {

@@ -10,7 +10,7 @@ import { NavItem } from '../../core/models';
 export class MainNavComponent {
   public navItems: NavItem[] = [
     { title: 'Candidates', link: 'candidates', shown: false, },
-    { title: 'Add Candidate', link: 'add-candidate', shown: false, },
+    { title: 'Add Candidate', link: 'candidate', shown: false, },
     { title: 'Sign in', link: 'signin', shown: true, },
     { title: 'Sign Up', link: 'signup', shown: true, },
   ];
@@ -26,7 +26,7 @@ export class MainNavComponent {
   public updateNavItems(isLoggedIn: boolean | null) {
     this.navItems = [
       { title: 'Candidates', link: 'candidates', shown: !!isLoggedIn, },
-      { title: 'Add Candidate', link: 'add-candidate', shown: !!isLoggedIn, },
+      { title: 'Add Candidate', link: 'candidate', shown: !!isLoggedIn, },
       { title: 'Sign in', link: 'signin', shown: !isLoggedIn, },
       { title: 'Sign Up', link: 'signup', shown: !isLoggedIn, },
     ];

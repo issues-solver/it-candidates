@@ -7,7 +7,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { SignUpCredentials } from './models';
+import { SignUpCredentials } from '../../models';
 import {
   FormArray,
   FormBuilder,
@@ -15,7 +15,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { CONTACT_TYPES } from '../../core/constants';
+import { CONTACT_TYPES } from '../../../../core/constants';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

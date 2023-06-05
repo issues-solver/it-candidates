@@ -53,8 +53,8 @@ export class AuthService {
     return this.http.post<any>(`${environment.apiUrl}/logout`, {})
       .pipe(
         tap(() => {
-          this.cookieService.delete(this.ACCESS_TOKEN_COOKIE_KEY);
           this.updateLoggedInStatus(false);
+          this.cookieService.delete(this.ACCESS_TOKEN_COOKIE_KEY);
           this.router.navigate(['/welcome']);
         }),
       );

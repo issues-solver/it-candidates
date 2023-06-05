@@ -5,8 +5,8 @@ import { TableData } from '../../shared/models';
 export type CandidatesData = TableData<Candidate>;
 
 export interface Candidate {
-  id: string;
-  name: string;
+  _id: string;
+  fullName: string;
   country: string;
   city: string;
   contacts: Contact[];

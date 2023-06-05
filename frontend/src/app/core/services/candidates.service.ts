@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CandidatesData } from '../models';
+import { Candidate, CandidatesData } from '../models';
 import { TableLoadData } from '../../shared/models';
 import { environment } from '../../../environments/environment';
 
@@ -14,8 +14,16 @@ export class CandidatesService {
     return this.http.get<CandidatesData>(`${environment.apiUrl}/candidates?page=${page}&limit=${limit}`);
   }
 
-  public createCandidate(candidate: any): Observable<any> {
+  public getCandidate(id: string): Observable<Candidate> {
+    return this.http.get<Candidate>(`${environment.apiUrl}/candidate?id=${id}`);
+  }
+
+  public createCandidate(candidate: Candidate): Observable<any> {
     return this.http.post<any>('http://localhost:3000/api/create-candidate', candidate)
+  }
+
+  public editCandidate(id: string, candidate: Candidate): Observable<any> {
+    return this.http.put<any>(`${environment.apiUrl}/edit-candidate/${id}`, candidate);
   }
 
   public getPopularSkills(): Observable<string[]> {

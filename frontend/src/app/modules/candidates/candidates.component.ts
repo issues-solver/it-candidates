@@ -32,6 +32,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
   @ViewChild('experience', { static: true }) experienceRef!: TemplateRef<any>;
 
+  @ViewChild('actions', { static: true }) actionsRef!: TemplateRef<any>;
+
   constructor(private candidatesService: CandidatesService) {}
 
   ngOnInit() {
@@ -106,6 +108,15 @@ export class CandidatesComponent implements OnInit, OnDestroy {
         },
         flexWidth: '2',
       },
+      {
+        value: 'actions',
+        header: 'Actions',
+        typeData: {
+          type: ColumnType.Custom,
+          customTemplate: this.actionsRef,
+        },
+        flexWidth: '2',
+      }
     ];
   }
 

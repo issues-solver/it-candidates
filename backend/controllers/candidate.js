@@ -26,6 +26,19 @@ const getCandidates = async (req, res) => {
     }
 };
 
+const getCandidate = async (req, res) => {
+    try {
+        const candidate = await Candidate.findOne({ id: req.params.id });
+        if (!candidate) {
+            return res.status(400).json({ message: 'There is no such candidate' });
+        }
+        res.status(200).json(candidate);
+    }   catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+}
+
 const createCandidate = (req, res) => {
   const candidate = new Candidate({ ...req.body, userId: req.userId, });
   return candidate.save()
@@ -35,5 +48,24 @@ const createCandidate = (req, res) => {
     .catch((err) => console.log(err));
 };
 
+const editCandidate = async (req, res) => {
+    const candidateId = req.params.id;
+    const updatedCandidate = req.body;
+
+    try {
+        const result = await Candidate.findByIdAndUpdate(candidateId, updatedCandidate);
+        if (result) {
+            res.status(201).json({ message: 'Candidate updated successfully' });
+        }   else {
+            res.status(404).json({ message: 'Candidate not found' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
 exports.getCandidates = getCandidates;
+exports.getCandidate = getCandidate;
 exports.createCandidate = createCandidate;
+exports.editCandidate = editCandidate;
