@@ -15,6 +15,7 @@ import { RouterModule } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
       multi: true,
     },
   ],
-  declarations: [AuthFormComponent, SignInComponent, SignUpComponent, WelcomeComponent],
-  exports: [AuthFormComponent, SignInComponent, SignUpComponent, WelcomeComponent]
+  declarations: [AuthFormComponent, SignInComponent, SignUpComponent, WelcomeComponent, ProfileComponent],
+  exports: [AuthFormComponent, SignInComponent, SignUpComponent, WelcomeComponent, ProfileComponent]
 })
 export class AuthModule {}

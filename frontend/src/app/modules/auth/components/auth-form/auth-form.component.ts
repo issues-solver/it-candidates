@@ -17,6 +17,7 @@ import {
 } from '@angular/forms';
 import { CONTACT_TYPES } from '../../../../core/constants';
 import { Subject, takeUntil } from 'rxjs';
+import { AuthMode } from '../../constants';
 
 @Component({
   selector: 'app-auth-form',
@@ -32,6 +33,8 @@ export class AuthFormComponent implements OnInit, OnDestroy {
   public authForm!: FormGroup;
 
   public contactTypes = CONTACT_TYPES;
+
+  @Input() mode = AuthMode.SignIn;
 
   @Input() isSignUp = false;
 

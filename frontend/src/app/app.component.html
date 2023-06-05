@@ -27,7 +27,7 @@
         [isLoggedIn]="authService.isLoggedIn$ | async">
       </app-main-nav>
       <div class="icons" *ngIf="authService.isLoggedIn$ | async">
-        <button type="button" mat-icon-button>
+        <button type="button" mat-icon-button routerLink="/profile">
           <mat-icon>account_circle</mat-icon>
         </button>
         <button type="button" mat-icon-button (click)="logout()">

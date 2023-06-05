@@ -5,6 +5,7 @@ import { SignUpComponent } from './modules/auth/components/sign-up/sign-up.compo
 import { LoggedInAuthGuard } from './modules/auth/guards/logged-in-auth.guard';
 import { WelcomeComponent } from './modules/auth/components/welcome/welcome.component';
 import { LoggedOutAuthGuard } from './modules/auth/guards/logged-out-auth.guard';
+import { ProfileComponent } from './modules/auth/components/profile/profile.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,14 @@ const routes: Routes = [
     loadChildren: () => import('./modules/add-candidate/add-candidate.module')
       .then((m) => m.AddCandidateModule),
     canLoad: [LoggedInAuthGuard],
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [LoggedInAuthGuard],
+    data: {
+      title: 'User Profile',
+    },
   },
   {
     path: '',

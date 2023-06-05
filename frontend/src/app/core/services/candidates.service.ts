@@ -26,6 +26,10 @@ export class CandidatesService {
     return this.http.put<any>(`${environment.apiUrl}/edit-candidate/${id}`, candidate);
   }
 
+  public deleteCandidate(id: string): Observable<any> {
+    return this.http.delete<any>(`${environment.apiUrl}/delete-candidate/${id}`);
+  }
+
   public getPopularSkills(): Observable<string[]> {
     return this.http.get<string[]>('http://localhost:3000/api/popular-skills');
   }

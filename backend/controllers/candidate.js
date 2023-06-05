@@ -28,7 +28,7 @@ const getCandidates = async (req, res) => {
 
 const getCandidate = async (req, res) => {
     try {
-        const candidate = await Candidate.findOne({ id: req.params.id });
+        const candidate = await Candidate.findById(req.query.id);
         if (!candidate) {
             return res.status(400).json({ message: 'There is no such candidate' });
         }
@@ -63,9 +63,20 @@ const editCandidate = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
+
+const deleteCandidate = async (req, res) => {
+    try {
+        await Candidate.findByIdAndDelete(req.params.id);
+        res.status(201).json({ message: 'Candidate deleted successfully!' });
+    }   catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 exports.getCandidates = getCandidates;
 exports.getCandidate = getCandidate;
 exports.createCandidate = createCandidate;
 exports.editCandidate = editCandidate;
+exports.deleteCandidate = deleteCandidate;

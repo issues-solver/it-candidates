@@ -164,16 +164,15 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         switchMap(() => {
+          this.form.reset();
+          this.clearFormControlsValidation();
           return this.dialogService.openDialog({
             message: 'Candidate created successfully!',
             showCancelButton: false,
           });
         })
       )
-      .subscribe(() => {
-        this.form.reset();
-        this.clearFormControlsValidation();
-      });
+      .subscribe();
   }
 
   private editCandidate() {
