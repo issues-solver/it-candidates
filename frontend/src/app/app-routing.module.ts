@@ -38,7 +38,7 @@ const routes: Routes = [
     canLoad: [LoggedInAuthGuard],
   },
   {
-    path: 'add-candidate',
+    path: 'candidate',
     loadChildren: () => import('./modules/add-candidate/add-candidate.module')
       .then((m) => m.AddCandidateModule),
     canLoad: [LoggedInAuthGuard],

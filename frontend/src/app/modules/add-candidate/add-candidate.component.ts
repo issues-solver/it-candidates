@@ -9,9 +9,11 @@ import {
 } from '@angular/forms';
 import { Candidate, Contact, User } from '../../core/models';
 import { ContactType, EXPERIENCE_YEARS, GRADES } from '../../core/constants';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
+import { filter, map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { CandidatesService } from '../../core/services';
 import { AuthService } from '../auth/services/auth-service';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { DialogService } from '../../core/services/dialog.service';
 
 type UiUserContacts = { type: ContactType, values: string[] }[];
 
@@ -41,6 +43,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   public apiSkills$!: Observable<string[]>;
   public grades = GRADES;
   public experienceYears = EXPERIENCE_YEARS;
+  public candidateId!: string;
 
   @Input() editMode = false;
 
@@ -48,6 +51,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private candidatesService: CandidatesService,
     private authService: AuthService,
+    private route: ActivatedRoute,
+    private dialogService: DialogService,
     ) {
     this.initForm();
   }
@@ -56,6 +61,42 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
     this.apiSkills$ = this.getApiSkills();
     this.recruiterContacts$ = this.authService.getUser()
       .pipe(map((user: User) => this.processUserContacts(user.contacts)));
+    if (this.editMode) {
+      this.listenForCandidate();
+    }
+  }
+
+  private listenForCandidate() {
+    this.route.paramMap
+      .pipe(
+        takeUntil(this.destroy$),
+        map((paramMap: ParamMap) => paramMap.get('candidateId')),
+        filter(Boolean),
+        switchMap((id: string) => {
+          this.candidateId = id;
+          return this.candidatesService.getCandidate(id)
+        })
+      )
+      .subscribe((candidate: Candidate) => {
+        this.handleCandidate(candidate);
+      });
+  }
+
+  private handleCandidate(candidate: Candidate) {
+    const { fullName, recruiterContact, contacts, grade, lastContactDateMs, skills, experience } = candidate;
+    this.form.patchValue({
+      fullName,
+      recruiterContact,
+      grade,
+      skills,
+      experience,
+      lastContactDate: new Date(lastContactDateMs),
+    });
+    const contactsValue = contacts.reduce<Record<string, string>>((acc, curr) => {
+      acc[curr.type] = curr.value;
+      return acc;
+    }, {});
+    this.contactsFormGroup.patchValue(contactsValue);
   }
 
   private atLeastOneContactRequiredValidator(group: AbstractControl): ValidationErrors | null {
@@ -107,9 +148,12 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   }
 
   public onFormSubmit() {
-    console.log(this.form.value);
     if (this.form.valid) {
-      this.createCandidate();
+      if (this.editMode) {
+        this.editCandidate();
+      } else {
+        this.createCandidate();
+      }
     } else {
       this.form.markAllAsTouched();
     }
@@ -117,10 +161,31 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 
   private createCandidate() {
     this.candidatesService.createCandidate(this.getPayload())
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(() => {
+          return this.dialogService.openDialog({
+            message: 'Candidate created successfully!',
+            showCancelButton: false,
+          });
+        })
+      )
       .subscribe(() => {
         this.form.reset();
+        this.clearFormControlsValidation();
       });
+  }
+
+  private editCandidate() {
+    this.candidatesService.editCandidate(this.candidateId, this.getPayload())
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(() => this.dialogService.openDialog({
+          message: 'Candidate updated successfully!',
+          showCancelButton: false,
+        }))
+      )
+      .subscribe();
   }
 
   private getPayload(): Candidate {
@@ -145,6 +210,15 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   private getLastContactDateMs(): number {
     const { lastContactDate } = this.form.value;
     return lastContactDate ? lastContactDate.getTime() : null;
+  }
+
+  private clearFormControlsValidation(): void {
+    Object.keys(this.form.controls).forEach(key => {
+      const control = this.form.get(key);
+      control?.setErrors(null);
+      control?.markAsPristine();
+      control?.markAsUntouched();
+    });
   }
 
   ngOnDestroy() {

@@ -10,6 +10,10 @@ const router = express.Router();
 
 router.get('/api/candidates', verifyToken, candidateController.getCandidates);
 
+router.get('/api/candidate', verifyToken, candidateController.getCandidate);
+
 router.post('/api/create-candidate', verifyToken, CandidateValidators, candidateController.createCandidate);
+
+router.put('/api/edit-candidate/:id', verifyToken, CandidateValidators, candidateController.editCandidate);
 
 module.exports = router;

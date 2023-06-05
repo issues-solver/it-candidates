@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  forwardRef,
+  Input,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -43,6 +51,9 @@ export class SkillsSelectComponent implements OnInit, ControlValueAccessor {
   private onChange!: (data: string[]) => void;
 
   private onTouched!: () => void;
+
+  constructor(private cdr: ChangeDetectorRef) {
+  }
 
   ngOnInit() {
     this.filteredOptions$ = this.skillControl.valueChanges.pipe(
@@ -124,9 +135,8 @@ export class SkillsSelectComponent implements OnInit, ControlValueAccessor {
 
   // Value Accessor
   public writeValue(skills: string[]): void {
-    if (skills?.length) {
-      this.addedSkills = skills;
-    }
+    this.addedSkills = skills || [];
+    this.cdr.markForCheck();
   }
 
   registerOnChange(fn: (data: string[]) => void): void {

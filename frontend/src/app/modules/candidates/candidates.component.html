@@ -6,17 +6,17 @@
   (loadData)="candidates$$.next($event)">
 </app-table>
 
-<ng-template #contactsInfo let-row="row" let-column=column>
+<ng-template #contactsInfo let-row="row" let-column="column">
   <div class="cell-content">
-    <ul>
+    <ul class="contacts">
       <li *ngFor="let contact of row[column.value]">
-        {{ contact.type}}: {{ contact.value }}
+        <b>{{ contact.type}}:</b> {{ contact.value }}
       </li>
     </ul>
   </div>
 </ng-template>
 
-<ng-template #list let-row="row" let-column=column>
+<ng-template #list let-row="row" let-column="column">
   <div class="cell-content">
     <ul>
       <li *ngFor="let item of row[column.value]; let last = last">
@@ -26,14 +26,22 @@
   </div>
 </ng-template>
 
-<ng-template #dateMs let-row="row" let-column=column>
+<ng-template #dateMs let-row="row" let-column="column">
   <div class="cell-content">
     {{ row[column.value] ? (row[column.value] | date : 'dd/MM/YYYY') : '' }}
   </div>
 </ng-template>
 
-<ng-template #experience let-row="row" let-column=column>
+<ng-template #experience let-row="row" let-column="column">
   <div class="cell-content">
     {{getExperienceValue | memoizePipe : row[column.value]}}
+  </div>
+</ng-template>
+
+<ng-template #actions let-row="row">
+  <div class="cell-content">
+    <button type="button>" mat-icon-button [routerLink]="['/candidate', row['_id']]">
+      <mat-icon>edit</mat-icon>
+    </button>
   </div>
 </ng-template>
