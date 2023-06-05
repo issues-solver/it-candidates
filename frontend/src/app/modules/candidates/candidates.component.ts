@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, TemplateRef, Vie
 import { ColumnType, TableColumn, TableLoadData } from '../../shared/models';
 import { Candidate, CandidatesData } from '../../core/models';
 import { CandidatesService } from '../../core/services';
-import { BehaviorSubject, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { EXPERIENCE_YEARS_MAP, ExperienceYears } from '../../core/constants';
+import { DialogService } from '../../core/services/dialog.service';
 
 @Component({
   selector: 'app-candidates',
@@ -34,7 +35,10 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
   @ViewChild('actions', { static: true }) actionsRef!: TemplateRef<any>;
 
-  constructor(private candidatesService: CandidatesService) {}
+  constructor(
+    private candidatesService: CandidatesService,
+    private dialogService: DialogService,
+  ) {}
 
   ngOnInit() {
     this.initColumns();
@@ -42,7 +46,10 @@ export class CandidatesComponent implements OnInit, OnDestroy {
     this.candidatesData$ = this.candidates$$
       .pipe(
         takeUntil(this.destroy$),
-        switchMap((data) => this.getCandidatesData(data))
+        switchMap((data) => {
+          this.pageSize = data.limit;
+          return this.getCandidatesData(data)
+        })
       );
   }
 
@@ -130,6 +137,26 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
   public getExperienceValue(value: ExperienceYears): string {
     return EXPERIENCE_YEARS_MAP[value];
+  }
+
+  public onCandidateRemove(candidate: Candidate) {
+    this.dialogService.openDialog({
+      message: `Are you sure you want to delete ${candidate.fullName}? This action cannot be undone.`
+    }).pipe(
+      switchMap((res) => {
+        if (!res) {
+          return EMPTY;
+        }
+        return this.candidatesService.deleteCandidate(candidate._id);
+      }),
+      switchMap(() => {
+        this.candidates$$.next({ page: 1, limit: this.pageSize });
+        return this.dialogService.openDialog({
+          message: 'Candidate deleted successfully!',
+          showCancelButton: false,
+        });
+      })
+    ).subscribe();
   }
 
   ngOnDestroy() {

@@ -16,4 +16,6 @@ router.post('/api/create-candidate', verifyToken, CandidateValidators, candidate
 
 router.put('/api/edit-candidate/:id', verifyToken, CandidateValidators, candidateController.editCandidate);
 
+router.delete('/api/delete-candidate/:id', verifyToken, candidateController.deleteCandidate);
+
 module.exports = router;

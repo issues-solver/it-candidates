@@ -41,7 +41,10 @@
 <ng-template #actions let-row="row">
   <div class="cell-content">
     <button type="button>" mat-icon-button [routerLink]="['/candidate', row['_id']]">
-      <mat-icon>edit</mat-icon>
+      <mat-icon color="primary">edit</mat-icon>
+    </button>
+    <button type="button>" mat-icon-button>
+      <mat-icon color="warn" (click)="onCandidateRemove(row)">delete</mat-icon>
     </button>
   </div>
 </ng-template>

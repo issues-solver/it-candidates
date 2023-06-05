@@ -126,7 +126,7 @@
               color="primary"
               class="actions__btn actions__btn--submit"
               type="submit">
-        Create
+        {{ editMode ? 'Update' : 'Create' }}
       </button>
     </mat-card-actions>
   </form>
