@@ -12,9 +12,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { RouterModule } from '@angular/router';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SharedModule } from '../../shared/shared.module';
 
@@ -30,18 +27,6 @@ import { SharedModule } from '../../shared/shared.module';
     MatSelectModule,
     RouterModule,
     SharedModule,
-  ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true,
-    },
   ],
   declarations: [AuthFormComponent, SignInComponent, SignUpComponent, WelcomeComponent, ProfileComponent],
   exports: [AuthFormComponent, SignInComponent, SignUpComponent, WelcomeComponent, ProfileComponent]
