@@ -16,6 +16,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ProfileComponent } from './components/profile/profile.component';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     MatCardModule,
     MatSelectModule,
     RouterModule,
+    SharedModule,
   ],
   providers: [
     {

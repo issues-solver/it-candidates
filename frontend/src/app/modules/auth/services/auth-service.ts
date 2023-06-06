@@ -64,6 +64,10 @@ export class AuthService {
     return this.http.get<User>(`${environment.apiUrl}/user`);
   }
 
+  public updateUser(user: Partial<User>): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/user`, user);
+  }
+
   public getAccessToken(): string {
     return this.cookieService.get(this.ACCESS_TOKEN_COOKIE_KEY);
   }
@@ -75,8 +79,6 @@ export class AuthService {
       const expirationDate = new Date(tokenData.exp * 1000); // Convert the expiration timestamp to milliseconds
 
       // Compare the expiration date with the current date
-      console.log('tokenData', tokenData);
-      console.log('expirationDate', expirationDate);
       return expirationDate <= new Date();
     }
     return true; // Treat token as expired if it doesn't exist

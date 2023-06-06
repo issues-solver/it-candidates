@@ -12,7 +12,6 @@ export class SignInComponent {
   constructor(private authService: AuthService) {}
 
   public signIn(data: SignUpCredentials) {
-    console.log(data);
     this.authService.signin(data).subscribe();
   }
 }

@@ -1,23 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { SignUpCredentials } from '../../models';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CONTACT_TYPES } from '../../../../core/constants';
 import { Subject, takeUntil } from 'rxjs';
-import { AuthMode } from '../../constants';
+import { AuthService } from '../../services/auth-service';
+import { Contact, User } from '../../../../core/models';
 
 @Component({
   selector: 'app-auth-form',
@@ -28,43 +15,57 @@ import { AuthMode } from '../../constants';
 export class AuthFormComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  private minPasswordLength = 6;
+  private contactsDestroy$ = new Subject<void>();
+
+  public minPasswordLength = 6;
 
   public authForm!: FormGroup;
 
   public contactTypes = CONTACT_TYPES;
 
-  @Input() mode = AuthMode.SignIn;
+  @Input() isProfilePage = false;
 
-  @Input() isSignUp = false;
+  @Input() fullMode = false;
+
+  @Input() saveBtnText = 'Sign In';
 
   @Output() submitForm = new EventEmitter<SignUpCredentials>();
 
   constructor(
     private fb: FormBuilder,
+    private authService: AuthService,
   ) {
   }
 
   ngOnInit() {
     this.authForm = this.getAuthForm();
-    if (this.isSignUp) {
+    if (this.fullMode) {
       this.listenForContactsValidity();
+    }
+    if (this.isProfilePage) {
+      this.getUser();
     }
   }
 
   private getAuthForm(): FormGroup {
-    return this.isSignUp ?
+    let passwordValidators = [Validators.minLength(this.minPasswordLength), Validators.required];
+    let confirmPasswordValidators = [Validators.required];
+    if (this.isProfilePage) {
+      passwordValidators = [Validators.minLength(this.minPasswordLength)];
+      confirmPasswordValidators = [];
+    }
+    return this.fullMode ?
+      this.fb.group({
+        firstName: ['', [Validators.required]],
+        lastName: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', passwordValidators],
+        confirmPassword: ['', confirmPasswordValidators],
+        contacts: this.fb.array([this.getContactField({ firstContact: true })]),
+      }, { validators: this.customMatchingPasswords('password', 'confirmPassword') }) :
       this.fb.group({
         email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(this.minPasswordLength)]],
-        confirmPassword: ['', (this.isSignUp ? [Validators.required] : [])],
-        firstName: ['', (this.isSignUp ? [Validators.required] : [])],
-        lastName: ['', (this.isSignUp ? [Validators.required] : [])],
-        contacts: this.fb.array([this.getContactField(true)]),
-      }) :
-      this.fb.group({
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(this.minPasswordLength)]],
+        password: ['', passwordValidators],
       });
   }
 
@@ -72,11 +73,30 @@ export class AuthFormComponent implements OnInit, OnDestroy {
     return this.authForm.get('contacts') as FormArray;
   }
 
-  private getContactField(firstContact = false): FormGroup {
+  private getUser() {
+    this.authService.getUser()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user: User) => this.handleUser(user));
+  }
+
+  private handleUser(user: User) {
+    this.contactsDestroy$.next(); // Stop listening the previous subscription
+    const { firstName, lastName, email, contacts } = user;
+    this.authForm.patchValue({ firstName, lastName, email, });
+    this.contactForms.clear();
+    contacts.forEach(({ type, value }: Contact, index: number) => {
+      const firstContact = index === 0;
+      this.contactForms.push(this.getContactField({ firstContact, type, value }));
+    })
+    this.listenForContactsValidity();
+  }
+
+  private getContactField(data?: { firstContact?: boolean; type?: string; value?: string; }): FormGroup {
+    const { firstContact = false, type = '', value = '' } = data || {};
     const validators = firstContact ? [Validators.required] : [];
     return this.fb.group({
-      type: ['', validators],
-      contact: ['', validators],
+      type: [type, validators],
+      value: [value, validators],
     });
   }
 
@@ -99,14 +119,14 @@ export class AuthFormComponent implements OnInit, OnDestroy {
 
   private listenForContactsValidity() {
     this.contactForms.valueChanges
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.contactsDestroy$))
       .subscribe(() => {
         // skip first formGroup, it's already had required validator
         const formGroups = this.contactForms.controls.slice(1);
         // Check each form group
         for (const formGroup of formGroups) {
           const typeControl = formGroup.get('type') as FormControl;
-          const contactControl = formGroup.get('contact') as FormControl;
+          const contactControl = formGroup.get('value') as FormControl;
 
           // Apply conditional validators based on the control values
           if (typeControl.value || contactControl.value) {
@@ -124,8 +144,25 @@ export class AuthFormComponent implements OnInit, OnDestroy {
       });
   }
 
+  private customMatchingPasswords(passwordKey: string, passwordConfirmationKey: string) {
+    return (group: FormGroup) => {
+      const password = group.controls[passwordKey];
+      const passwordConfirmation = group.controls[passwordConfirmationKey];
+
+      if (passwordConfirmation.errors && !passwordConfirmation.errors['mismatchedPasswords']) {
+        // return if another validator has already found an error on the matchingControl
+        return;
+      }
+      // set error on matchingControl if validation fails
+      const error = password.value !== passwordConfirmation.value ? { mismatchedPasswords: true } : null;
+      passwordConfirmation.setErrors(error);
+    };
+  }
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    this.contactsDestroy$.next();
+    this.contactsDestroy$.complete();
   }
 }
