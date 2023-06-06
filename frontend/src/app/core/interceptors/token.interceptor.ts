@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
-import { AuthService } from '../services/auth-service';
-import { DialogService } from '../../../core/services/dialog.service';
+import { AuthService } from '../../modules/auth/services/auth-service';
+import { DialogService } from '../services/dialog.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -23,7 +23,6 @@ export class TokenInterceptor implements HttpInterceptor {
                 showCancelButton: false,
               }))
             ).subscribe();
-          return throwError('Token has expired');
         }
         return throwError(error);
       })
