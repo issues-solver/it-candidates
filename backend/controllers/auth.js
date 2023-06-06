@@ -22,7 +22,7 @@ const postSignup = async (req, res) => {
         await newUser.save();
 
         // Generate a JWT token
-        const accessToken = jwt.sign({ userId: newUser._id }, config.jwtSecret, { expiresIn: '1h' });
+        const accessToken = jwt.sign({ userId: newUser._id }, config.jwtSecret, { expiresIn: '8h' });
         res.json({ accessToken });
     } catch (err) {
         res.status(500).json({ message: 'Internal server error' });
