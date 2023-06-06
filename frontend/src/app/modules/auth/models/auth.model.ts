@@ -1,14 +1,5 @@
-import { Contact } from '../../../core/models';
+import { User } from '../../../core/models';
 
-export interface SignInCredentials {
-  email: string;
-  password: string;
-}
+export interface SignInCredentials extends Pick<User, 'email' | 'password'> {}
 
-export interface SignUpCredentials {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  contacts: Contact[];
-}
+export interface SignUpCredentials extends User {}

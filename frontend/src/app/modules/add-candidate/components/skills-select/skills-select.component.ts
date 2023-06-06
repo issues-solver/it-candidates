@@ -125,12 +125,19 @@ export class SkillsSelectComponent implements OnInit, ControlValueAccessor {
     this.addedSkills = [...this.addedSkills];
     this.autocompleteTrigger.closePanel();
     this.onChange(this.addedSkills);
+    if (!this.addedSkills.length) {
+      this.updateValueAndValidity();
+    }
   }
 
   private customAutoCompleteValidator(): ValidatorFn  {
     return (): ValidationErrors | null => {
       return this.addedSkills.length ? null : { atLeastOne: true };
     }
+  }
+
+  public updateValueAndValidity(): void {
+    this.skillControl.updateValueAndValidity();
   }
 
   // Value Accessor

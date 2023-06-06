@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require("../models/user");
+const User = require('../models/user');
 const config = require('../config');
 
 const postSignup = async (req, res) => {
@@ -68,7 +68,30 @@ const getUser = async (req, res) => {
     res.status(200).json(user);
 };
 
+const updateUser = async (req, res) => {
+    const userId = req.userId;
+    const { password, ...updatedUser } = req.body
+    try {
+        // Hash password
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            updatedUser.password = await bcrypt.hash(password, salt);
+        }
+
+        const result = await User.findByIdAndUpdate(userId, updatedUser);
+        if (result) {
+            res.status(201).json({ message: 'User updated successfully' });
+        }   else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 exports.postSignup = postSignup;
 exports.postSignin = postSignin;
 exports.postLogout = postLogout;
 exports.getUser = getUser;
+exports.updateUser = updateUser;

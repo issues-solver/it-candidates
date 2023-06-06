@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -14,6 +14,7 @@ import { CandidatesService } from '../../core/services';
 import { AuthService } from '../auth/services/auth-service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { DialogService } from '../../core/services/dialog.service';
+import { SkillsSelectComponent } from './components/skills-select/skills-select.component';
 
 type UiUserContacts = { type: ContactType, values: string[] }[];
 
@@ -28,8 +29,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   public form!: FormGroup;
   public contactsFormGroup!: FormGroup;
   public skillsFormArray!: FormArray;
-  public fullNameMinLength = 3;
-  public contactMinLength = 4;
+  public fullNameMinLength = 2;
+  public contactMinLength = 2;
   public userContacts: User['contacts'] = [
     { type: ContactType.Linkedin, value: 'linkedin 2' },
     { type: ContactType.Linkedin, value: 'linkedin 2' },
@@ -46,6 +47,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   public candidateId!: string;
 
   @Input() editMode = false;
+
+  @ViewChild(SkillsSelectComponent) skillsSelect!: SkillsSelectComponent;
 
   constructor(
     private fb: FormBuilder,
@@ -156,6 +159,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
       }
     } else {
       this.form.markAllAsTouched();
+      this.skillsSelect.updateValueAndValidity();
     }
   }
 
