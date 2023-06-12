@@ -1,10 +1,28 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ColumnType, TableColumn, TableLoadData } from '../../shared/models';
-import { Candidate, CandidatesData } from '../../core/models';
+import { ColumnType, TableColumn, PageParams } from '../../shared/models';
+import {
+  Candidate,
+  CandidateFilterParams,
+  CandidateParams,
+  CandidatesData,
+  Contact,
+  User
+} from '../../core/models';
 import { CandidatesService } from '../../core/services';
-import { BehaviorSubject, EMPTY, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  EMPTY,
+  map,
+  Observable,
+  Subject,
+  switchMap,
+  takeUntil, tap
+} from 'rxjs';
 import { EXPERIENCE_YEARS_MAP, ExperienceYears } from '../../core/constants';
 import { DialogService } from '../../core/services/dialog.service';
+import { AuthService } from '../auth/services/auth-service';
+import { SkillsService } from '../../core/services/skills.service';
 
 @Component({
   selector: 'app-candidates',
@@ -23,7 +41,21 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
   public pageSize = 10;
 
-  public candidates$$ = new BehaviorSubject<TableLoadData>({ page: 1, limit: this.pageSize });
+  public initialFilterData: CandidateFilterParams = {
+    fullName: null,
+    recruiterContact: null,
+    skills: [],
+    grade: null,
+    experience: null,
+  };
+
+  public pagination$$ = new BehaviorSubject<PageParams>({ page: 1, limit: this.pageSize });
+
+  public filterData$$ = new BehaviorSubject<CandidateFilterParams>(this.initialFilterData);
+
+  public recruiterContacts$!: Observable<Contact[]>;
+
+  public skills$!: Observable<string[]>;
 
   @ViewChild('contactsInfo', { static: true }) contactsInfoRef!: TemplateRef<any>;
 
@@ -38,19 +70,32 @@ export class CandidatesComponent implements OnInit, OnDestroy {
   constructor(
     private candidatesService: CandidatesService,
     private dialogService: DialogService,
+    private authService: AuthService,
+    private skillsService: SkillsService,
   ) {}
 
   ngOnInit() {
     this.initColumns();
-
-    this.candidatesData$ = this.candidates$$
+    this.skills$ = this.skillsService.getSkills();
+    this.candidatesData$ = combineLatest([
+      this.pagination$$
+        .pipe(tap((pageData) => this.pageSize = pageData.limit)),
+      this.filterData$$
+    ])
       .pipe(
         takeUntil(this.destroy$),
-        switchMap((data) => {
-          this.pageSize = data.limit;
+        switchMap(([pageData, filterData]) => {
+          const data = {
+            ...pageData,
+            ...filterData
+          };
           return this.getCandidatesData(data)
         })
       );
+
+    this.recruiterContacts$ = this.authService.getUser().pipe(
+      map((user: User) => user.contacts)
+    );
   }
 
   private initColumns(): void {
@@ -127,7 +172,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
     ];
   }
 
-  public getCandidatesData(data: TableLoadData) {
+  public getCandidatesData(data: CandidateParams) {
     return this.candidatesService.getCandidates(data);
   }
 
@@ -150,7 +195,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
         return this.candidatesService.deleteCandidate(candidate._id);
       }),
       switchMap(() => {
-        this.candidates$$.next({ page: 1, limit: this.pageSize });
+        this.pagination$$.next({ page: 1, limit: this.pageSize });
         return this.dialogService.openDialog({
           message: 'Candidate deleted successfully!',
           showCancelButton: false,

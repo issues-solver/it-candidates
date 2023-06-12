@@ -30,6 +30,8 @@
   @include mat.paginator-theme($theme);
   @include mat.table-theme($theme);
   @include mat.dialog-theme($theme);
+  @include mat.expansion-theme($theme);
+  @include mat.checkbox-theme($theme);
 }
 
 .default-theme {

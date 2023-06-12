@@ -1,14 +1,12 @@
 import { Contact } from './contact.model';
 import { Grade } from '../constants';
-import { TableData } from '../../shared/models';
+import { PageParams, TableData } from '../../shared/models';
 
 export type CandidatesData = TableData<Candidate>;
 
 export interface Candidate {
   _id: string;
   fullName: string;
-  country: string;
-  city: string;
   contacts: Contact[];
   recruiterContact: Contact;
   skills: string[];
@@ -16,3 +14,13 @@ export interface Candidate {
   grade: Grade;
   experience: number;
 }
+
+export interface CandidateFilterParams {
+  fullName: string | null;
+  recruiterContact: string | null;
+  skills: string[];
+  grade: Grade | null;
+  experience: number | null;
+}
+
+export interface CandidateParams extends CandidateFilterParams, PageParams {}

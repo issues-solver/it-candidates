@@ -15,6 +15,7 @@ import { AuthService } from '../auth/services/auth-service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { DialogService } from '../../core/services/dialog.service';
 import { SkillsSelectComponent } from './components/skills-select/skills-select.component';
+import { SkillsService } from '../../core/services/skills.service';
 
 type UiUserContacts = { type: ContactType, values: string[] }[];
 
@@ -53,6 +54,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private candidatesService: CandidatesService,
+    private skillsService: SkillsService,
     private authService: AuthService,
     private route: ActivatedRoute,
     private dialogService: DialogService,
@@ -147,7 +149,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   }
 
   private getApiSkills(): Observable<string[]> {
-    return this.candidatesService.getPopularSkills();
+    return this.skillsService.getSkills();
   }
 
   public onFormSubmit() {

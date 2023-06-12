@@ -22,7 +22,7 @@ export interface TableData<T> {
   totalItems: number;
 }
 
-export interface TableLoadData {
+export interface PageParams {
   page: number;
   limit: number;
 }

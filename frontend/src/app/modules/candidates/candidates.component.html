@@ -1,9 +1,17 @@
+<app-filters
+  class="filters"
+  [recruiterContacts]="recruiterContacts$ | async"
+  (submitForm)="filterData$$.next($event)"
+  [skills]="skills$ | async"
+  (clearForm)="filterData$$.next(initialFilterData)">
+</app-filters>
+
 <app-table
   [columns]="columns"
   [dataSource]="candidatesData$ | async"
   [pageSizeOptions]="pageSizeOptions"
   [pageSize]="pageSize"
-  (loadData)="candidates$$.next($event)">
+  (loadData)="pagination$$.next($event)">
 </app-table>
 
 <ng-template #contactsInfo let-row="row" let-column="column">
