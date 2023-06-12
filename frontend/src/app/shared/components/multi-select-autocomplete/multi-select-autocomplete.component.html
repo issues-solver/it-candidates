@@ -1,0 +1,38 @@
+<mat-form-field class="form-field skills" appearance="outline">
+  <mat-label [hidden]="selectedOptions.length && !auto.isOpen">Skills</mat-label>
+  <div *ngIf="!auto.isOpen && selectedOptions.length" class="selected">
+    <ng-container *ngFor="let selected of selectedOptions; let last = last">
+      {{ selected }}<ng-container *ngIf="!last">,</ng-container>
+    </ng-container>
+  </div>
+  <ng-container
+    *ngIf="selectedOptions.length && !auto.isOpen"
+    [ngTemplateOutlet]="resetBtn"
+    [ngTemplateOutletContext]="{$implicit: resetSelectedOptions}">
+  </ng-container>
+  <input type="text" [formControl]="searchControl" matInput [matAutocomplete]="auto">
+  <ng-container
+    *ngIf="searchControl.value"
+    [ngTemplateOutlet]="resetBtn"
+    [ngTemplateOutletContext]="{$implicit: resetSearchControl}">
+  </ng-container>
+  <mat-autocomplete #auto="matAutocomplete" (closed)="resetSearchControl()">
+    <mat-option
+      *ngFor="let skill of options | filterBySearchTerm : searchControl.value"
+      class="custom-option">
+      <mat-checkbox [ngModel]="selectedOptionsMap[skill]" [ngModelOptions]="{ standalone: true }"
+                    (click)="$event.preventDefault(); $event.stopPropagation(); onOptionSelect(skill)">
+        {{ skill }}
+      </mat-checkbox>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+<ng-template #resetBtn let-resetMethod>
+  <button
+          type="button"
+          mat-icon-button
+          class="reset"
+          (click)="resetMethod()">
+    <mat-icon>close</mat-icon>
+  </button>
+</ng-template>

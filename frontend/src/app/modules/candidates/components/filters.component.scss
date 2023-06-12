@@ -1,0 +1,19 @@
+.filters {
+  &__title {
+    margin: 0 auto;
+  }
+  &__fields {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  &__btn {
+    &--submit {
+      margin-left: 10px;
+    }
+  }
+}

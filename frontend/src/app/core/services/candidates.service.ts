@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Candidate, CandidatesData } from '../models';
-import { TableLoadData } from '../../shared/models';
+import { Candidate, CandidateParams, CandidatesData } from '../models';
 import { environment } from '../../../environments/environment';
+import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
-export class CandidatesService {
-  constructor(private http: HttpClient) {}
+export class CandidatesService extends ApiService {
+  constructor(override http: HttpClient) {
+    super(http);
+  }
 
-  public getCandidates(data: TableLoadData): Observable<CandidatesData> {
-    const { page, limit } = data;
-    return this.http.get<CandidatesData>(`${environment.apiUrl}/candidates?page=${page}&limit=${limit}`);
+  public getCandidates(params: CandidateParams): Observable<CandidatesData> {
+    return this.get<CandidatesData>(
+      `${environment.apiUrl}/candidates`, params);
   }
 
   public getCandidate(id: string): Observable<Candidate> {

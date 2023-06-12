@@ -1,9 +1,22 @@
 const Candidate = require('../models/candidate');
+const Skill = require('../models/skill');
 
 const getCandidates = async (req, res) => {
     const { page = 1, limit = 10, ...filterParams } = req.query;
     const skip = (page - 1) * limit;
     const filters = { userId: req.userId };
+    if (filterParams.fullName) {
+        filters.fullName = { $regex: new RegExp(filterParams.fullName, 'i') };
+    }
+    if (filterParams.recruiterContact) {
+        filters.recruiterContact = filterParams.recruiterContact;
+    }
+    if (filterParams.grade) {
+        filters.grade = filterParams.grade;
+    }
+    if (filterParams.experience) {
+        filters.experience = filterParams.experience;
+    }
     if (filterParams.skills) {
         const skills = filterParams.skills.split(',').map(skill => skill.trim().toLowerCase());
         const regexSkills = skills.map(skill => new RegExp(`^${skill}$`, 'i'));
@@ -39,21 +52,63 @@ const getCandidate = async (req, res) => {
     }
 }
 
-const createCandidate = (req, res) => {
-  const candidate = new Candidate({ ...req.body, userId: req.userId, });
-  return candidate.save()
-    .then(() => {
-      return res.status(201).json('Successfully created');
-    })
-    .catch((err) => console.log(err));
+const saveNewSkills = async (skills) => {
+    const requestedSkills = skills.map((skill) => Skill.findOne({ value: skill }));
+    const checkedSkills = await Promise.allSettled(requestedSkills);
+    const skillsForSave = checkedSkills.reduce((acc, curr, index) => {
+        if (curr.status === 'fulfilled' && !curr.value) {
+            acc.push({ value: skills[index] });
+        }
+        return acc;
+    }, []);
+    if (skillsForSave.length) {
+        await Skill.insertMany(skillsForSave);
+    }
+};
+
+const createCandidate = async (req, res) => {
+    try {
+        const candidate = new Candidate({ ...req.body, userId: req.userId, });
+        await candidate.save();
+        const { skills } = req.body;
+        // const requestedSkills = skills.map((skill) => Skill.findOne({ value: skill }));
+        // const checkedSkills = await Promise.allSettled(requestedSkills);
+        // const skillsForSave = checkedSkills.reduce((acc, curr, index) => {
+        //     if (curr.status === 'fulfilled' && !curr.value) {
+        //         acc.push({ value: skills[index] });
+        //     }
+        //     return acc;
+        // }, []);
+        // if (skillsForSave.length) {
+        //     await Skill.insertMany(skillsForSave);
+        // }
+        await saveNewSkills(skills);
+        res.status(201).json('Successfully created')
+    }   catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 };
 
 const editCandidate = async (req, res) => {
     const candidateId = req.params.id;
     const updatedCandidate = req.body;
+    const { skills } = req.body;
 
     try {
         const result = await Candidate.findByIdAndUpdate(candidateId, updatedCandidate);
+        await saveNewSkills(skills);
+        // const requestedSkills = skills.map((skill) => Skill.findOne({ value: skill }));
+        // const checkedSkills = await Promise.allSettled(requestedSkills);
+        // const skillsForSave = checkedSkills.reduce((acc, curr, index) => {
+        //     if (curr.status === 'fulfilled' && !curr.value) {
+        //         acc.push({ value: skills[index] });
+        //     }
+        //     return acc;
+        // }, []);
+        // if (skillsForSave.length) {
+        //     await Skill.insertMany(skillsForSave);
+        // }
         if (result) {
             res.status(201).json({ message: 'Candidate updated successfully' });
         }   else {

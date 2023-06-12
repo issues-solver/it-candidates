@@ -7,7 +7,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { ColumnType, TableColumn, TableData, TableLoadData } from '../../models';
+import { ColumnType, TableColumn, TableData, PageParams } from '../../models';
 import { MatPaginator } from '@angular/material/paginator';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -41,7 +41,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() pageSize = 0;
 
-  @Output() loadData = new EventEmitter<TableLoadData>();
+  @Output() loadData = new EventEmitter<PageParams>();
 
   @ViewChild('text', { static: true }) text!: TemplateRef<unknown>;
 

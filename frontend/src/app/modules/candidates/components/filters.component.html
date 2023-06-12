@@ -1,0 +1,66 @@
+<mat-accordion class="filters">
+  <mat-expansion-panel
+    (opened)="panelOpenState = true"
+    (closed)="panelOpenState = false">
+    <mat-expansion-panel-header class="filters__header">
+      <h2 class="filters__title">Filtration panel</h2>
+    </mat-expansion-panel-header>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="filters__fields">
+        <mat-form-field appearance="outline">
+          <mat-label>Full Name</mat-label>
+          <input type="text" matInput formControlName="fullName" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Recruiter Contact</mat-label>
+          <mat-select formControlName="recruiterContact">
+            <mat-option>-- None --</mat-option>
+            <mat-option *ngFor="let item of recruiterContacts" [value]="item.value">
+              {{ item.type }}: {{ item.value }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.controls['recruiterContact'].hasError('required')">
+            Recruiter Contact is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Grade</mat-label>
+          <mat-select formControlName="grade">
+            <mat-option>-- None --</mat-option>
+            <mat-option *ngFor="let grade of grades" [value]="grade">
+              {{ grade }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Experience</mat-label>
+          <mat-select formControlName="experience">
+            <mat-option>-- None --</mat-option>
+            <mat-option *ngFor="let value of experienceYears" [value]="value.value">
+              {{ value.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <app-multi-select-autocomplete
+          [options]="skills"
+          formControlName="skills">
+        </app-multi-select-autocomplete>
+      </div>
+      <div class="filters__actions">
+        <button mat-raised-button
+                color="accent"
+                type="button"
+                class="filters__btn filters__btn--cancel"
+                (click)="onCancel()">
+          Cancel
+        </button>
+        <button mat-raised-button
+                color="primary"
+                type="submit"
+                class="filters__btn filters__btn--submit">
+          Apply
+        </button>
+      </div>
+    </form>
+  </mat-expansion-panel>
+</mat-accordion>

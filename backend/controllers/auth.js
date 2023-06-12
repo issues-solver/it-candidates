@@ -47,7 +47,7 @@ const postSignin = async (req, res) => {
         }
 
         // Generate JWT token
-        const accessToken = jwt.sign({ userId: user._id }, config.jwtSecret, { expiresIn: '1h' });
+        const accessToken = jwt.sign({ userId: user._id }, config.jwtSecret, { expiresIn: '8h' });
 
         // Set the token as a cookie
         res.cookie('accessToken', accessToken, { httpOnly: true });
