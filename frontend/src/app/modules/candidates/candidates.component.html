@@ -11,6 +11,7 @@
   [dataSource]="candidatesData$ | async"
   [pageSizeOptions]="pageSizeOptions"
   [pageSize]="pageSize"
+  [loading]="loading"
   (loadData)="pagination$$.next($event)">
 </app-table>
 

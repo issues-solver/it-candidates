@@ -57,6 +57,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
   public skills$!: Observable<string[]>;
 
+  public loading = true;
+
   @ViewChild('contactsInfo', { static: true }) contactsInfoRef!: TemplateRef<any>;
 
   @ViewChild('list', { static: true }) listRef!: TemplateRef<any>;
@@ -83,6 +85,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
       this.filterData$$
     ])
       .pipe(
+        tap(() => this.loading = true),
         takeUntil(this.destroy$),
         switchMap(([pageData, filterData]) => {
           const data = {
@@ -90,7 +93,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
             ...filterData
           };
           return this.getCandidatesData(data)
-        })
+        }),
+        tap(() => this.loading = false)
       );
 
     this.recruiterContacts$ = this.authService.getUser().pipe(
@@ -115,7 +119,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
           type: ColumnType.Custom,
           customTemplate: this.contactsInfoRef,
         },
-        flexWidth: '4',
+        flexWidth: '2',
       },
       {
         value: 'recruiterContact',
@@ -132,7 +136,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
           type: ColumnType.Custom,
           customTemplate: this.listRef,
         },
-        flexWidth: '4',
+        flexWidth: '3',
       },
       {
         value: 'lastContactDateMs',

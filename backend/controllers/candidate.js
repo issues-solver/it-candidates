@@ -61,9 +61,9 @@ const saveNewSkills = async (skills) => {
         }
         return acc;
     }, []);
-    if (skillsForSave.length) {
-        await Skill.insertMany(skillsForSave);
-    }
+    return skillsForSave.length
+        ? Skill.insertMany(skillsForSave)
+        : Promise.resolve();
 };
 
 const createCandidate = async (req, res) => {
@@ -71,17 +71,6 @@ const createCandidate = async (req, res) => {
         const candidate = new Candidate({ ...req.body, userId: req.userId, });
         await candidate.save();
         const { skills } = req.body;
-        // const requestedSkills = skills.map((skill) => Skill.findOne({ value: skill }));
-        // const checkedSkills = await Promise.allSettled(requestedSkills);
-        // const skillsForSave = checkedSkills.reduce((acc, curr, index) => {
-        //     if (curr.status === 'fulfilled' && !curr.value) {
-        //         acc.push({ value: skills[index] });
-        //     }
-        //     return acc;
-        // }, []);
-        // if (skillsForSave.length) {
-        //     await Skill.insertMany(skillsForSave);
-        // }
         await saveNewSkills(skills);
         res.status(201).json('Successfully created')
     }   catch (err) {
@@ -98,17 +87,6 @@ const editCandidate = async (req, res) => {
     try {
         const result = await Candidate.findByIdAndUpdate(candidateId, updatedCandidate);
         await saveNewSkills(skills);
-        // const requestedSkills = skills.map((skill) => Skill.findOne({ value: skill }));
-        // const checkedSkills = await Promise.allSettled(requestedSkills);
-        // const skillsForSave = checkedSkills.reduce((acc, curr, index) => {
-        //     if (curr.status === 'fulfilled' && !curr.value) {
-        //         acc.push({ value: skills[index] });
-        //     }
-        //     return acc;
-        // }, []);
-        // if (skillsForSave.length) {
-        //     await Skill.insertMany(skillsForSave);
-        // }
         if (result) {
             res.status(201).json({ message: 'Candidate updated successfully' });
         }   else {
