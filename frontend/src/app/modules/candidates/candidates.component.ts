@@ -1,28 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ColumnType, TableColumn, PageParams } from '../../shared/models';
-import {
-  Candidate,
-  CandidateFilterParams,
-  CandidateParams,
-  CandidatesData,
-  Contact,
-  User
-} from '../../core/models';
+import { ColumnType, PageParams, TableColumn } from '../../shared/models';
+import { Candidate, CandidateFilterParams, CandidateParams, CandidatesData, Contact, User } from '../../core/models';
 import { CandidatesService } from '../../core/services';
-import {
-  BehaviorSubject,
-  combineLatest,
-  EMPTY,
-  map,
-  Observable,
-  Subject,
-  switchMap,
-  takeUntil, tap
-} from 'rxjs';
-import { EXPERIENCE_YEARS_MAP, ExperienceYears } from '../../core/constants';
+import { BehaviorSubject, combineLatest, EMPTY, map, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { ContactType, EXPERIENCE_YEARS_MAP, ExperienceYears } from '../../core/constants';
 import { DialogService } from '../../core/services/dialog.service';
 import { AuthService } from '../auth/services/auth-service';
 import { SkillsService } from '../../core/services/skills.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {Clipboard} from '@angular/cdk/clipboard';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-candidates',
@@ -74,6 +61,9 @@ export class CandidatesComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private authService: AuthService,
     private skillsService: SkillsService,
+    private sanitizer: DomSanitizer,
+    private clipboard: Clipboard,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -206,6 +196,38 @@ export class CandidatesComponent implements OnInit, OnDestroy {
         });
       })
     ).subscribe();
+  }
+
+  public getContactHtml(contact: Contact): SafeHtml {
+    let html!: SafeHtml;
+    switch (contact.type) {
+      case ContactType.Linkedin: {
+        html = this.sanitizer.bypassSecurityTrustHtml(
+          `<a href="${contact.value}" target="_blank" class="contact-link">link</a>`
+        );
+        break;
+      }
+      case ContactType.Telegram: {
+        const tgLink = contact.value.startsWith('@') ? `https://t.me/${contact.value.slice(1)}` : contact.value;
+        html = this.sanitizer.bypassSecurityTrustHtml(
+          `<a href="${tgLink}" target="_blank" class="contact-link">link</a>`
+        );
+        break;
+      }
+      default: {
+        html = `<span>${contact.value}</span>`;
+        break;
+      }
+    }
+    return html;
+  }
+
+  public saveToClipboard(value: string) {
+    const toCopy = value as string;
+    this.clipboard.copy(toCopy);
+    this.snackBar.open('Copied to clipboard', 'X', {
+      duration: 2000,
+    });
   }
 
   ngOnDestroy() {

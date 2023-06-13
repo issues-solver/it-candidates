@@ -19,7 +19,14 @@
   <div class="cell-content">
     <ul class="contacts">
       <li *ngFor="let contact of row[column.value]">
-        <b>{{ contact.type}}:</b> {{ contact.value }}
+        <b>{{ contact.type}}: </b>
+        <ng-container *ngIf="getContactHtml(contact) as html">
+          <span [innerHTML]="html"></span>
+          <button class="copy-btn" type="button" mat-icon-button
+                  (click)="saveToClipboard(contact.value)">
+            <mat-icon class="copy-link">content_copy</mat-icon>
+          </button>
+        </ng-container>
       </li>
     </ul>
   </div>
