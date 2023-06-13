@@ -5,6 +5,7 @@
   &__fields {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     font-size: 13px;
   }
   &__actions {
@@ -15,5 +16,17 @@
     &--submit {
       margin-left: 10px;
     }
+  }
+}
+
+.form-field {
+  display: block;
+  width: 19%;
+}
+
+@media (max-width: 768px) {
+  /* Styles for screens smaller than 768px */
+  .form-field {
+    width: 30%;
   }
 }

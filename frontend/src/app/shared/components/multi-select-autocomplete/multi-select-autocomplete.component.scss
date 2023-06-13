@@ -12,6 +12,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.form-field {
+  width: 100%;
+}
 
 ::ng-deep {
   .search-skills {

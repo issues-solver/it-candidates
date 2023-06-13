@@ -27,6 +27,14 @@
     justify-content: center;
     color: #000000;
   }
+  mat-cell {
+    padding: 4px;
+    font-size: 12px;
+    word-break: break-word;
+  }
+  mat-header-cell {
+    padding: 4px;
+  }
 }
 
 .table {
