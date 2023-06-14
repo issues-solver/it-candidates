@@ -1,12 +1,12 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const cors = require('cors');
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import cors from 'cors';
 
-const candidateRoutes = require('./routes/candidate');
-const utilRoutes = require('./routes/util');
-const authRoutes = require('./routes/auth');
-const config = require('./config');
+import candidateRoutes from './routes/candidate.js';
+import utilRoutes from './routes/skill.js';
+import authRoutes from './routes/auth.js';
+import config from './config.js';
 
 const app = express();
 
@@ -36,6 +36,3 @@ mongoose.connect(MONGODB_URI)
     });
   })
   .catch((err) => console.log('Connection failed!', err));
-
-
-module.exports = app;

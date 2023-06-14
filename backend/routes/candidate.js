@@ -1,21 +1,26 @@
-const express = require('express');
+import express from 'express';
 
-const { verifyToken } = require('../middlewares/auth');
+import { verifyToken } from '../middlewares/auth.js';
+import {
+    getCandidates,
+    getCandidate,
+    createCandidate,
+    editCandidate,
+    deleteCandidate
+} from '../controllers/candidate.js';
 
-const candidateController = require('../controllers/candidate');
-
-const { CandidateValidators } = require('../validation/candidate');
+import { CandidateValidators } from '../validation/candidate.js';
 
 const router = express.Router();
 
-router.get('/api/candidates', verifyToken, candidateController.getCandidates);
+router.get('/api/candidates', verifyToken, getCandidates);
 
-router.get('/api/candidate', verifyToken, candidateController.getCandidate);
+router.get('/api/candidate', verifyToken, getCandidate);
 
-router.post('/api/create-candidate', verifyToken, CandidateValidators, candidateController.createCandidate);
+router.post('/api/create-candidate', verifyToken, CandidateValidators, createCandidate);
 
-router.put('/api/edit-candidate/:id', verifyToken, CandidateValidators, candidateController.editCandidate);
+router.put('/api/edit-candidate/:id', verifyToken, CandidateValidators, editCandidate);
 
-router.delete('/api/delete-candidate/:id', verifyToken, candidateController.deleteCandidate);
+router.delete('/api/delete-candidate/:id', verifyToken, deleteCandidate);
 
-module.exports = router;
+export default router;

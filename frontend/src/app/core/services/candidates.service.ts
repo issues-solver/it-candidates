@@ -31,8 +31,4 @@ export class CandidatesService extends ApiService {
   public deleteCandidate(id: string): Observable<any> {
     return this.http.delete<any>(`${environment.apiUrl}/delete-candidate/${id}`);
   }
-
-  public getPopularSkills(): Observable<string[]> {
-    return this.http.get<string[]>('http://localhost:3000/api/popular-skills');
-  }
 }

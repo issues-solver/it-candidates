@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const candidateSchema  = new Schema({
@@ -6,7 +6,7 @@ const candidateSchema  = new Schema({
     type: String,
     required: true,
   },
-  recruiterContact: { // TODO: think about [String] type
+  recruiterContact: {
     type: String,
     required: true,
   },
@@ -42,4 +42,4 @@ const candidateSchema  = new Schema({
   }
 });
 
-module.exports = mongoose.model('Candidate', candidateSchema);
+export default mongoose.model('Candidate', candidateSchema);

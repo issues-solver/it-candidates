@@ -1,9 +1,10 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const config = require('../config');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-const postSignup = async (req, res) => {
+import User from '../models/user.js';
+import config from '../config.js';
+
+export const postSignup = async (req, res) => {
     // TODO: Add server validation
     try {
         const { email, password, firstName, lastName, contacts } = req.body;
@@ -29,7 +30,7 @@ const postSignup = async (req, res) => {
     }
 };
 
-const postSignin = async (req, res) => {
+export const postSignin = async (req, res) => {
     // TODO: Add server validation
     try {
         const { email, password } = req.body;
@@ -59,16 +60,16 @@ const postSignin = async (req, res) => {
     }
 };
 
-const postLogout = (req, res) => {
+export const postLogout = (req, res) => {
     res.json({ message: 'Logged out successfully' });
 };
 
-const getUser = async (req, res) => {
+export const getUser = async (req, res) => {
     const user = await User.findOne({ _id: req.userId});
     res.status(200).json(user);
 };
 
-const updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
     const userId = req.userId;
     const { password, ...updatedUser } = req.body
     try {
@@ -89,9 +90,3 @@ const updateUser = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
-exports.postSignup = postSignup;
-exports.postSignin = postSignin;
-exports.postLogout = postLogout;
-exports.getUser = getUser;
-exports.updateUser = updateUser;
