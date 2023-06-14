@@ -1,8 +1,7 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    // TODO: Do I need to add id property???
     email: {
         type: String,
         required: true,
@@ -40,20 +39,4 @@ const userSchema = new Schema({
     }
 });
 
-// const signInSchema = new Schema({
-//     email: {
-//         type: String,
-//         required: true,
-//         unique: true,
-//     },
-//     password: {
-//         type: String,
-//         required: true,
-//     },
-// });
-
-const User = mongoose.model('User', userSchema);
-// const SignInUser = mongoose.model('SignInUser', signInSchema);
-
-module.exports = User;
-
+export default mongoose.model('User', userSchema);

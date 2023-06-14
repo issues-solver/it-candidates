@@ -1,7 +1,7 @@
-const { check } = require("express-validator");
-const { handleValidationErrors } = require("./util");
+import { check } from 'express-validator';
+import { handleValidationErrors } from './util.js';
 
-const UserValidators = [
+export const UserValidators = [
     check('firstName')
         .notEmpty().withMessage('First Name is required'),
     check('lastName')
@@ -13,5 +13,3 @@ const UserValidators = [
         .isArray({ min: 1 }).withMessage('At least one contact is required'),
     handleValidationErrors,
 ];
-
-exports.UserValidators = UserValidators;

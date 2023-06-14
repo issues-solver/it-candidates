@@ -1,7 +1,7 @@
-const Candidate = require('../models/candidate');
-const Skill = require('../models/skill');
+import Candidate from '../models/candidate.js';
+import { saveNewSkills } from './skill.js';
 
-const getCandidates = async (req, res) => {
+export const getCandidates = async (req, res) => {
     const { page = 1, limit = 10, ...filterParams } = req.query;
     const skip = (page - 1) * limit;
     const filters = { userId: req.userId };
@@ -39,7 +39,7 @@ const getCandidates = async (req, res) => {
     }
 };
 
-const getCandidate = async (req, res) => {
+export const getCandidate = async (req, res) => {
     try {
         const candidate = await Candidate.findById(req.query.id);
         if (!candidate) {
@@ -50,38 +50,13 @@ const getCandidate = async (req, res) => {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
     }
-}
-
-const saveNewSkills = async (skills) => {
-    const requestedSkills = skills.map((skill) => Skill.findOne({ value: skill }));
-    const checkedSkills = await Promise.allSettled(requestedSkills);
-    const skillsForSave = checkedSkills.reduce((acc, curr, index) => {
-        if (curr.status === 'fulfilled' && !curr.value) {
-            acc.push({ value: skills[index] });
-        }
-        return acc;
-    }, []);
-    if (skillsForSave.length) {
-        await Skill.insertMany(skillsForSave);
-    }
 };
 
-const createCandidate = async (req, res) => {
+export const createCandidate = async (req, res) => {
     try {
         const candidate = new Candidate({ ...req.body, userId: req.userId, });
         await candidate.save();
         const { skills } = req.body;
-        // const requestedSkills = skills.map((skill) => Skill.findOne({ value: skill }));
-        // const checkedSkills = await Promise.allSettled(requestedSkills);
-        // const skillsForSave = checkedSkills.reduce((acc, curr, index) => {
-        //     if (curr.status === 'fulfilled' && !curr.value) {
-        //         acc.push({ value: skills[index] });
-        //     }
-        //     return acc;
-        // }, []);
-        // if (skillsForSave.length) {
-        //     await Skill.insertMany(skillsForSave);
-        // }
         await saveNewSkills(skills);
         res.status(201).json('Successfully created')
     }   catch (err) {
@@ -90,7 +65,7 @@ const createCandidate = async (req, res) => {
     }
 };
 
-const editCandidate = async (req, res) => {
+export const editCandidate = async (req, res) => {
     const candidateId = req.params.id;
     const updatedCandidate = req.body;
     const { skills } = req.body;
@@ -98,17 +73,6 @@ const editCandidate = async (req, res) => {
     try {
         const result = await Candidate.findByIdAndUpdate(candidateId, updatedCandidate);
         await saveNewSkills(skills);
-        // const requestedSkills = skills.map((skill) => Skill.findOne({ value: skill }));
-        // const checkedSkills = await Promise.allSettled(requestedSkills);
-        // const skillsForSave = checkedSkills.reduce((acc, curr, index) => {
-        //     if (curr.status === 'fulfilled' && !curr.value) {
-        //         acc.push({ value: skills[index] });
-        //     }
-        //     return acc;
-        // }, []);
-        // if (skillsForSave.length) {
-        //     await Skill.insertMany(skillsForSave);
-        // }
         if (result) {
             res.status(201).json({ message: 'Candidate updated successfully' });
         }   else {
@@ -120,7 +84,7 @@ const editCandidate = async (req, res) => {
     }
 };
 
-const deleteCandidate = async (req, res) => {
+export const deleteCandidate = async (req, res) => {
     try {
         await Candidate.findByIdAndDelete(req.params.id);
         res.status(201).json({ message: 'Candidate deleted successfully!' });
@@ -129,9 +93,3 @@ const deleteCandidate = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
-exports.getCandidates = getCandidates;
-exports.getCandidate = getCandidate;
-exports.createCandidate = createCandidate;
-exports.editCandidate = editCandidate;
-exports.deleteCandidate = deleteCandidate;

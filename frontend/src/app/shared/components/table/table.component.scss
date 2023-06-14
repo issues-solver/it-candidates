@@ -1,3 +1,42 @@
+.app-table {
+  border-radius: 5px;
+  &__container {
+    position: relative;
+    background-color: #ffffff;
+  }
+  &__wrapper {
+    max-height: 620px;
+    overflow: auto;
+  }
+  &__loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__no-data {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+  }
+  mat-cell {
+    padding: 4px;
+    font-size: 12px;
+    word-break: break-word;
+  }
+  mat-header-cell {
+    padding: 4px;
+  }
+}
+
 .table {
   width: 100%;
 }

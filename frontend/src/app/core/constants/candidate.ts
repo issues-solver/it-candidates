@@ -16,9 +16,9 @@ export enum ExperienceYears {
 }
 
 export const EXPERIENCE_YEARS_MAP = {
-  [ExperienceYears.ToThree]: 'from 1 to 3 years',
-  [ExperienceYears.ToFive]: 'from 3 to 5 years',
-  [ExperienceYears.ToTen]: 'from 5 to 10 years',
+  [ExperienceYears.ToThree]: '1-3 years',
+  [ExperienceYears.ToFive]: '3-5 years',
+  [ExperienceYears.ToTen]: '5-10 years',
   [ExperienceYears.More]: '10+ years',
 };
 

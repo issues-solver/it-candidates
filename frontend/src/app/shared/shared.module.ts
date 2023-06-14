@@ -22,6 +22,7 @@ import {
   MultiSelectAutocompleteComponent
 } from './components/multi-select-autocomplete/multi-select-autocomplete.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatAutocompleteModule,
     ReactiveFormsModule,
     FormsModule,
+    MatProgressSpinnerModule,
   ],
   declarations: [
     TableComponent,

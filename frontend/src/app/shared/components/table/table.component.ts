@@ -26,7 +26,6 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy {
   public totalItems!: number;
 
   @Input() columns: TableColumn[] = [];
-
   @Input() set dataSource(value: TableData<unknown> | null) {
     if (value) {
       const { data, totalItems } = value;
@@ -34,12 +33,10 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy {
       this.totalItems = totalItems;
     }
   };
-
   @Input() totalElements = 0;
-
   @Input() pageSizeOptions: number[] = [];
-
   @Input() pageSize = 0;
+  @Input() loading = true;
 
   @Output() loadData = new EventEmitter<PageParams>();
 

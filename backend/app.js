@@ -1,15 +1,12 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const cors = require('cors');
-// const popularSkills = ['ASP.NET', 'C', 'C#', 'C++', 'CSS', 'CoffeeScript', 'Crystal', 'DM', 'Dart', 'Docker', 'Elixir', 'EmberScript', 'Git', 'Go', 'GraphQL', 'Groovy', 'HTML', 'HTTP', 'JSON', 'Java', 'JavaScript', 'Kotlin', 'Linux', 'Nginx', 'Objective-C', 'PHP', 'Pascal', 'Perl', 'PowerShell', 'Python', 'Ruby', 'Rust', 'SQL', 'Scala', 'Shell', 'Svelte', 'Swift', 'Terra', 'TypeScript', 'Vue', 'WebAssembly', 'XML', 'YAML'];
-// const skills = popularSkills.map((i) => ({value: i}));
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import cors from 'cors';
 
-const candidateRoutes = require('./routes/candidate');
-const utilRoutes = require('./routes/util');
-const authRoutes = require('./routes/auth');
-const config = require('./config');
-// const Skill = require('./models/skill');
+import candidateRoutes from './routes/candidate.js';
+import utilRoutes from './routes/skill.js';
+import authRoutes from './routes/auth.js';
+import config from './config.js';
 
 const app = express();
 
@@ -33,13 +30,9 @@ app.use(authRoutes);
 
 mongoose.connect(MONGODB_URI)
   .then(() => {
-      // Skill.insertMany(skills).then();
     console.log('Connected to the database');
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}`);
     });
   })
   .catch((err) => console.log('Connection failed!', err));
-
-
-module.exports = app;

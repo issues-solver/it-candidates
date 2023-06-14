@@ -1,9 +1,9 @@
-const { check } = require('express-validator');
-const { handleValidationErrors } = require("./util");
+import { check } from 'express-validator';
+import { handleValidationErrors } from './util.js';
 
 const passwordMinLength = 6;
 
-const SignupValidators = [
+export const SignupValidators = [
     check('email')
         .notEmpty().withMessage('Email is required')
         .isEmail().withMessage('Invalid email'),
@@ -20,7 +20,7 @@ const SignupValidators = [
     handleValidationErrors
 ];
 
-const SigninValidators = [
+export const SigninValidators = [
     check('email')
         .notEmpty().withMessage('Email is required')
         .isEmail().withMessage('Invalid email'),
@@ -29,6 +29,3 @@ const SigninValidators = [
         .isLength({min: passwordMinLength}).withMessage('Password must be at least 6 characters long'),
     handleValidationErrors,
 ];
-
-exports.SignupValidators = SignupValidators;
-exports.SigninValidators = SigninValidators;

@@ -7,11 +7,11 @@
     </mat-expansion-panel-header>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="filters__fields">
-        <mat-form-field appearance="outline">
+        <mat-form-field class="form-field" appearance="outline">
           <mat-label>Full Name</mat-label>
           <input type="text" matInput formControlName="fullName" autocomplete="off">
         </mat-form-field>
-        <mat-form-field appearance="outline">
+        <mat-form-field class="form-field" appearance="outline">
           <mat-label>Recruiter Contact</mat-label>
           <mat-select formControlName="recruiterContact">
             <mat-option>-- None --</mat-option>
@@ -42,6 +42,7 @@
           </mat-select>
         </mat-form-field>
         <app-multi-select-autocomplete
+          class="form-field"
           [options]="skills"
           formControlName="skills">
         </app-multi-select-autocomplete>
