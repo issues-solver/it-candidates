@@ -1,10 +1,11 @@
-import Candidate from '../models/candidate.js';
+import Candidate from '../mongoose-models/candidate.js';
 import { saveNewSkills } from './skill.js';
+import { OriginalRequest, OriginalResponse, RequestWithUserId } from '../models/common.js';
 
-export const getCandidates = async (req, res) => {
-    const { page = 1, limit = 10, ...filterParams } = req.query;
+export const getCandidates = async (req: OriginalRequest, res: OriginalResponse) => {
+    const { page = 1, limit = 10, ...filterParams } = req.query as any;
     const skip = (page - 1) * limit;
-    const filters = { userId: req.userId };
+    const filters: Record<string, unknown> = { userId: (req as RequestWithUserId).userId };
     if (filterParams.fullName) {
         filters.fullName = { $regex: new RegExp(filterParams.fullName, 'i') };
     }
@@ -18,8 +19,8 @@ export const getCandidates = async (req, res) => {
         filters.experience = filterParams.experience;
     }
     if (filterParams.skills) {
-        const skills = filterParams.skills.split(',').map(skill => skill.trim().toLowerCase());
-        const regexSkills = skills.map(skill => new RegExp(`^${skill}$`, 'i'));
+        const skills = filterParams.skills.split(',').map((skill: string) => skill.trim().toLowerCase());
+        const regexSkills = skills.map((skill: string) => new RegExp(`^${skill}$`, 'i'));
         filters.skills = { $all: regexSkills };
     }
     try {
@@ -39,7 +40,7 @@ export const getCandidates = async (req, res) => {
     }
 };
 
-export const getCandidate = async (req, res) => {
+export const getCandidate = async (req: OriginalRequest, res: OriginalResponse) => {
     try {
         const candidate = await Candidate.findById(req.query.id);
         if (!candidate) {
@@ -52,9 +53,9 @@ export const getCandidate = async (req, res) => {
     }
 };
 
-export const createCandidate = async (req, res) => {
+export const createCandidate = async (req: OriginalRequest, res: OriginalResponse) => {
     try {
-        const candidate = new Candidate({ ...req.body, userId: req.userId, });
+        const candidate = new Candidate({ ...req.body, userId: (req as RequestWithUserId).userId, });
         await candidate.save();
         const { skills } = req.body;
         await saveNewSkills(skills);
@@ -65,7 +66,7 @@ export const createCandidate = async (req, res) => {
     }
 };
 
-export const editCandidate = async (req, res) => {
+export const editCandidate = async (req: OriginalRequest, res: OriginalResponse) => {
     const candidateId = req.params.id;
     const updatedCandidate = req.body;
     const { skills } = req.body;
@@ -84,7 +85,7 @@ export const editCandidate = async (req, res) => {
     }
 };
 
-export const deleteCandidate = async (req, res) => {
+export const deleteCandidate = async (req: OriginalRequest, res: OriginalResponse) => {
     try {
         await Candidate.findByIdAndDelete(req.params.id);
         res.status(201).json({ message: 'Candidate deleted successfully!' });

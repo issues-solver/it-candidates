@@ -33,7 +33,7 @@ const userSchema = new Schema({
             }
         ],
         validate: {
-            validator: (contacts) => (contacts && contacts.length >= 1),
+            validator: (contacts: any[]) => (contacts && contacts.length >= 1),
             message: 'At least one contact is required',
         },
     }

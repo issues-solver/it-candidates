@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 
 import { verifyToken } from '../middlewares/auth.js';
 import {
@@ -11,7 +11,7 @@ import {
 
 import { CandidateValidators } from '../validation/candidate.js';
 
-const router = express.Router();
+const router = Router();
 
 router.get('/api/candidates', verifyToken, getCandidates);
 
