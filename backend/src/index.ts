@@ -8,7 +8,7 @@ import utilRoutes from './routes/skill.js';
 import authRoutes from './routes/auth.js';
 import config from './config.js';
 
-const app = express();
+const index = express();
 
 const port = process.env.PORT || 3000;
 
@@ -20,18 +20,18 @@ const getMongoDbUrl = (
 
 const MONGODB_URI = getMongoDbUrl();
 
-app.use(bodyParser.json());
+index.use(bodyParser.json());
 
-app.use(cors());
+index.use(cors());
 
-app.use(candidateRoutes);
-app.use(utilRoutes);
-app.use(authRoutes);
+index.use(candidateRoutes);
+index.use(utilRoutes);
+index.use(authRoutes);
 
 mongoose.connect(MONGODB_URI)
   .then(() => {
     console.log('Connected to the database');
-    app.listen(port, () => {
+    index.listen(port, () => {
       console.log(`Server is listening on port ${port}`);
     });
   })

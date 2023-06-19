@@ -1,10 +1,11 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import User from '../models/user.js';
+import User from '../mongoose-models/user.js';
 import config from '../config.js';
+import { RequestWithUserId, OriginalRequest, OriginalResponse } from '../models/common.js';
 
-export const postSignup = async (req, res) => {
+export const postSignup = async (req: OriginalRequest, res: OriginalResponse) => {
     // TODO: Add server validation
     try {
         const { email, password, firstName, lastName, contacts } = req.body;
@@ -30,7 +31,7 @@ export const postSignup = async (req, res) => {
     }
 };
 
-export const postSignin = async (req, res) => {
+export const postSignin = async (req: OriginalRequest, res: OriginalResponse) => {
     // TODO: Add server validation
     try {
         const { email, password } = req.body;
@@ -60,17 +61,17 @@ export const postSignin = async (req, res) => {
     }
 };
 
-export const postLogout = (req, res) => {
+export const postLogout = (req: OriginalRequest, res: OriginalResponse) => {
     res.json({ message: 'Logged out successfully' });
 };
 
-export const getUser = async (req, res) => {
-    const user = await User.findOne({ _id: req.userId});
+export const getUser = async (req: OriginalRequest, res: OriginalResponse) => {
+    const user = await User.findOne({ _id: (req as RequestWithUserId).userId });
     res.status(200).json(user);
 };
 
-export const updateUser = async (req, res) => {
-    const userId = req.userId;
+export const updateUser = async (req: OriginalRequest, res: OriginalResponse) => {
+    const userId = (req as RequestWithUserId).userId;
     const { password, ...updatedUser } = req.body
     try {
         // Hash password
